@@ -9,10 +9,33 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^4.5.1",
+    "@react-navigation/bottom-tabs": "^6.5.11",
+    "@react-navigation/drawer": "^6.6.6",
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/stack": "^6.3.20",
+    "@reduxjs/toolkit": "^2.0.1",
+    "@shopify/flash-list": "1.4.3",
+    "@tanstack/react-query": "^5.15.0",
+    "axios": "^1.6.2",
+    "echarts": "^5.4.3",
     "expo": "~49.0.15",
+    "expo-secure-store": "~12.3.1",
     "expo-status-bar": "~1.6.0",
+    "jwt-decode": "^4.0.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
+    "moti": "^0.27.2",
     "react": "18.2.0",
-    "react-native": "0.72.6"
+    "react-hook-form": "^7.49.2",
+    "react-native": "0.72.6",
+    "react-native-reanimated": "~3.3.0",
+    "react-native-safe-area-context": "4.6.3",
+    "react-native-screens": "~3.22.0",
+    "react-redux": "^9.0.4",
+    "socket.io-client": "^4.7.2",
+    "wrn-echarts": "^0.1.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
