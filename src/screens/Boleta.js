@@ -6,6 +6,8 @@ import {
   Dimensions,
   Alert,
   ActivityIndicator,
+  TouchableOpacity,
+  ScrollView
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,12 +26,13 @@ import { useQuery } from '@tanstack/react-query';
 //import lodash
 import _ from 'lodash';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import { xorBy } from 'lodash';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+//import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 
 //other dattimepicker
-import DatePicker from 'react-native-date-picker';
+//import DatePicker from 'react-native-date-picker';
 import 'moment';
 import 'moment/locale/es';
 import moment from 'moment-timezone';
@@ -244,6 +247,21 @@ const BoletaScreen = ({ navigation }) => {
     }
   }, [typeOption]);
 
+  const onChangeFechaInicio = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setOpen(false);
+    setDate(currentDate);
+    const fechaInicio = moment(currentDate);
+    setFechaInicio(fechaInicio.format('DD-MM-YYYY'));
+  }
+  const onChangeHoraInicio = (event, selectedDate) => {
+    const currentDate = selectedDate || date3;
+    setOpen3(false);
+    setDate3(currentDate);
+    const horaInicio = moment(currentDate);
+    setHoraInicio(horaInicio.format('HH:mm'));
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -344,16 +362,16 @@ const BoletaScreen = ({ navigation }) => {
               <View style={styles.btnNext}>
                 {isLoading ? (
                   <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: Dimensions.get('screen').width-40,
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      width: Dimensions.get('screen').width - 40,
 
-                  }}>
-                  <Text style={styles.textBtn}>Guardando 
-                  </Text>
-                  <ActivityIndicator size="large" color="#efefef" />
+                    }}>
+                    <Text style={styles.textBtn}>Guardando
+                    </Text>
+                    <ActivityIndicator size="large" color="#efefef" />
                   </View>
                 ) : (
                   <TouchableOpacity onPress={guardarBoleta}>
@@ -362,7 +380,7 @@ const BoletaScreen = ({ navigation }) => {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        width: Dimensions.get('screen').width-40,
+                        width: Dimensions.get('screen').width - 40,
 
                       }}>
                       <Text style={styles.textBtn}>Solicitar permiso</Text>
@@ -525,8 +543,15 @@ const BoletaScreen = ({ navigation }) => {
                       </Text>
                     </View>
                   </TouchableOpacity>
-
-                  <DatePicker
+                  {open && (
+                    <DateTimePicker
+                      testID="dateTimePicker"
+                      value={date}
+                      onChange={onChangeFechaInicio}
+                      themeVariant={isDarkMode ? "dark" : "light"}
+                    />
+                  )}
+                  {/* <DatePicker
                     key="fecha_ini"
                     title={'Fecha inicio:'}
                     confirmText="Aceptar"
@@ -549,7 +574,7 @@ const BoletaScreen = ({ navigation }) => {
                     textColor={
                       isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT
                     }
-                  />
+                  /> */}
                 </View>
 
                 {tieneHorario > 0 ? (
@@ -581,7 +606,17 @@ const BoletaScreen = ({ navigation }) => {
                         </Text>
                       </View>
                     </TouchableOpacity>
-                    <DatePicker
+                    {open3 && (
+                      <DateTimePicker
+                        testID="hora_inicio"
+                        value={new Date()}
+                        onChange={onChangeHoraInicio}
+                        mode='time'
+                        is24Hour={true}
+                        themeVariant={isDarkMode ? "dark" : "light"}
+                      />
+                    )}
+                    {/* <DatePicker
                       key="hora_inicio"
                       title={'Hora inicio:'}
                       confirmText="Aceptar"
@@ -611,7 +646,7 @@ const BoletaScreen = ({ navigation }) => {
                       textColor={
                         isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT
                       }
-                    />
+                    /> */}
                   </View>
                 ) : null}
               </View>
@@ -646,7 +681,7 @@ const BoletaScreen = ({ navigation }) => {
                         </Text>
                       </View>
                     </TouchableOpacity>
-                    <DatePicker
+                    {/*  <DatePicker
                       key="fecha_fin"
                       title={'Fecha fin:'}
                       confirmText="Aceptar"
@@ -669,7 +704,7 @@ const BoletaScreen = ({ navigation }) => {
                       textColor={
                         isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT
                       }
-                    />
+                    /> */}
                   </View>
                   {tieneHorario > 0 ? (
                     <View style={styles.groupInput}>
@@ -704,7 +739,7 @@ const BoletaScreen = ({ navigation }) => {
                           </Text>
                         </View>
                       </TouchableOpacity>
-                      <DatePicker
+                      {/* <DatePicker
                         key="hora_fin"
                         title={'Hora fin:'}
                         confirmText="Aceptar"
@@ -729,7 +764,7 @@ const BoletaScreen = ({ navigation }) => {
                         textColor={
                           isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT
                         }
-                      />
+                      /> */}
                     </View>
                   ) : null}
                 </View>
@@ -744,7 +779,7 @@ const BoletaScreen = ({ navigation }) => {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        width: Dimensions.get('screen').width-40,
+                        width: Dimensions.get('screen').width - 40,
                       }}>
                       <Text style={styles.textBtn}>Siguiente </Text>
                       <AntDesign

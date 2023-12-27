@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useState} from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -11,16 +11,16 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import { useSelector } from 'react-redux';
 import debounce from 'lodash/debounce';
-import _, {set} from 'lodash';
+import _, { set } from 'lodash';
 //import * as Animatable from 'react-native-animatable';
 import axios from 'axios';
 import Title from '../components/Title';
-import {PRIMARY_COLOR, SECONDARY_COLOR} from '../utils/constants';
+import { PRIMARY_COLOR, SECONDARY_COLOR } from '../utils/constants';
 import IonIcons from 'react-native-vector-icons/Ionicons';
-import Snackbar from 'react-native-snackbar';
-import {SafeAreaView} from 'react-native-safe-area-context';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   PRIMARY_TEXT,
   PRIMARY_TEXT_DARK,
@@ -35,12 +35,12 @@ import {
 
 //ICONS
 
-const SigecScreen = ({navigation}) => {
+const SigecScreen = ({ navigation }) => {
   const DEFAULT_MESSAGE =
     'Si desea buscar documentos hágalo en la casilla buscar. debe ingresar 3 caracteres como minimo';
   const refTextInputSearch = React.createRef();
   const [refresh, onRefresh] = React.useState(false);
-  const {isDarkMode} = useSelector(state => state.auth);
+  const { isDarkMode } = useSelector(state => state.auth);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
@@ -53,7 +53,7 @@ const SigecScreen = ({navigation}) => {
   );
 
   const getData = async () => {
-  
+
     if (q.length < 3) {
       console.log('aun no buscamos');
       setMessage(DEFAULT_MESSAGE);
@@ -76,13 +76,13 @@ const SigecScreen = ({navigation}) => {
         setPage(1);
         setMessage('No se encontró resultados para: ' + q);
       } else {
-        if(page===1){
+        if (page === 1) {
           setData(response.data.data)
-        }else{
-        setData([...data, ...response.data.data]);
-        //setFilterData(response.data.data);
-      }
-      setTotal(response.data.total);
+        } else {
+          setData([...data, ...response.data.data]);
+          //setFilterData(response.data.data);
+        }
+        setTotal(response.data.total);
       }
       //console.log(response.data.data);
     } catch (error) {
@@ -95,20 +95,20 @@ const SigecScreen = ({navigation}) => {
   };
 
   const navigateToDetail = item => {
-    if(item.nur!=""){
-      navigation.navigate('DetalleSigec', {item: item});
+    if (item.nur != "") {
+      navigation.navigate('DetalleSigec', { item: item });
     }
     else {
       Alert.alert('Mensaje', 'El documento no tiene hora de ruta')
     }
   };
   const onEndReached = () => {
-   
+
     if (page * perPage < total) {
       console.log('traer mas datos');
       setPage(page + 1);
       getData();
-    } 
+    }
     // else {
 
     //     Snackbar.show({
@@ -116,7 +116,7 @@ const SigecScreen = ({navigation}) => {
     //       duration: Snackbar.LENGTH_SHORT,
     //     });
     //   }
-    
+
   };
 
   const handleResetSearch = () => {
@@ -138,7 +138,7 @@ const SigecScreen = ({navigation}) => {
 
   useEffect(() => {
     setData([]);
-    if(q.length>2){
+    if (q.length > 2) {
       getData();
     }
   }, [q]);
@@ -173,7 +173,7 @@ const SigecScreen = ({navigation}) => {
       </View>
     );
   };
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     return (
       <TouchableOpacity onPress={() => navigateToDetail(item)} key={item.id}>
         <View
@@ -208,38 +208,38 @@ const SigecScreen = ({navigation}) => {
                 {item.cite_original}
               </Text>
             </View>
-            
-              {item.nur.length ? (
-                <View
-                  style={{
-                    //width: 120,
-                    alignSelf: 'flex-end',
-                    borderRadius: 20,
-                    padding: 6,
-                    textAlign: 'center',
-                    alignSelf: 'center',
-                    alignItems: 'center',
-                    borderColor: isDarkMode ? '#ffffff' : PRIMARY_COLOR,
-                    //backgroundColor: PRIMARY_COLOR,
-                    borderWidth: 1,
 
-                    marginBottom: 2,
-                    //transform: [{rotate: '-90deg'}],
-                  }}>
-                  <Text
-                    style={[
-                      styles.estadoText,
-                      {
-                        color: isDarkMode ? '#ffffff' : PRIMARY_COLOR, 
-                        //color: 'white',
-                        fontSize: 12,
-                        fontWeight: 'bold',
-                      },
-                    ]}>
-                    {item.nur}
-                  </Text>
-                </View>
-              ) : null}
+            {item.nur.length ? (
+              <View
+                style={{
+                  //width: 120,
+                  alignSelf: 'flex-end',
+                  borderRadius: 20,
+                  padding: 6,
+                  textAlign: 'center',
+                  alignSelf: 'center',
+                  alignItems: 'center',
+                  borderColor: isDarkMode ? '#ffffff' : PRIMARY_COLOR,
+                  //backgroundColor: PRIMARY_COLOR,
+                  borderWidth: 1,
+
+                  marginBottom: 2,
+                  //transform: [{rotate: '-90deg'}],
+                }}>
+                <Text
+                  style={[
+                    styles.estadoText,
+                    {
+                      color: isDarkMode ? '#ffffff' : PRIMARY_COLOR,
+                      //color: 'white',
+                      fontSize: 12,
+                      fontWeight: 'bold',
+                    },
+                  ]}>
+                  {item.nur}
+                </Text>
+              </View>
+            ) : null}
           </View>
           <View style={styles.description}>
             <Text
@@ -326,7 +326,7 @@ const SigecScreen = ({navigation}) => {
         flex: 1,
         backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
       }}>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <Title title="SIGEC" navigation={navigation} />
         <View style={styles.viewSearch} >
           <View
@@ -335,16 +335,16 @@ const SigecScreen = ({navigation}) => {
               flexDirection: 'row',
               justifyContent: 'flex-start',
               alignItems: 'center',
-              margin:0,
+              margin: 0,
               //marginBottom: 10,
               backgroundColor: isDarkMode
                 ? BACKGROUND_PRIMARY_DARK
                 : BACKGROUND_PRIMARY_LIGHT,
               width: Dimensions.get('window').width - 100,
               padding: 10,
-              borderRadius:20,
+              borderRadius: 20,
             }}>
-           <IonIcons color={TERTIARY_COLOR} name="search" size={20} />
+            <IonIcons color={TERTIARY_COLOR} name="search" size={20} />
             <TextInput
               ref={refTextInputSearch}
               style={styles.search}
@@ -357,24 +357,24 @@ const SigecScreen = ({navigation}) => {
             {q.length > 0 ? (
               <Pressable style={styles.btnSearch} onPress={handleResetSearch}>
                 <IonIcons name='close-circle' color={'#9c9c9c'} size={26} />
-   
+
               </Pressable>
             ) : null}
-            
+
           </View>
-          {total>0&&(
-          <Text
-            style={[
-              styles.totalText,
-              {
-                color: isDarkMode
-                  ? PRIMARY_TEXT_DARK_LIGHT
-                  : PRIMARY_TEXT_LIGHT,
-              marginRight:10    
-              },
-            ]}>
-            Total: {total}
-          </Text>)}
+          {total > 0 && (
+            <Text
+              style={[
+                styles.totalText,
+                {
+                  color: isDarkMode
+                    ? PRIMARY_TEXT_DARK_LIGHT
+                    : PRIMARY_TEXT_LIGHT,
+                  marginRight: 10
+                },
+              ]}>
+              Total: {total}
+            </Text>)}
         </View>
 
         {loading ? null : (
@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
   cargo: {
     fontSize: 12,
   },
-  
+
 
   estadoText: {
     fontSize: 10,
@@ -446,7 +446,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    alignContent:'flex-start',
+    alignContent: 'flex-start',
     paddingLeft: 10,
   },
   search: {
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     //backgroundColor: '#FFFFFF',
-   // margin: 5,
+    // margin: 5,
     borderRadius: 25,
     width: '89%',
     //padding: 5,
@@ -477,7 +477,7 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     justifyContent: 'center',
-   marginLeft: -9,
+    marginLeft: -9,
     padding: 0,
   },
   totalText: {

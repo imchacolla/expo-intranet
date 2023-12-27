@@ -4,8 +4,8 @@ import {
   createSlice,
 } from '@reduxjs/toolkit'
 import axios from 'axios'
-//import AsyncStorage from '@react-native-async-storage/async-storage'
-import * as SecureStore from 'expo-secure-store'
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { jwtDecode } from 'jwt-decode'
 const TOKEN_KEY = 'token';
@@ -26,7 +26,7 @@ export const authLogin = createAsyncThunk(
     if (response.status === 200) {
       //usuario autenticado
       if (response.data.success) {
-        await SecureStore.setItemAsync(TOKEN_KEY, response.data.token)
+        await AsyncStorage.setItem('token', response.data.token);
 
         //console.log(value)
         //await AsyncStorage.setItem ('user', JSON.stringify (response.data.user));
@@ -103,7 +103,7 @@ const authSlice = createSlice({
       rol_app: 6,
       e_mail_inst: '',
     },
-    oneSignalId: null,
+    oneSignalId: '',
     refreshPage: null,
   }),
   reducers: {
@@ -157,7 +157,7 @@ const authSlice = createSlice({
     },
 
     checkModeDark(state) {
-      AsyncStorage.getItem('isDarkMode')
+      AsyncStorage.getItemr('isDarkMode')
         .then((value) => {
           console.log('value', value)
           if (value == 'true') {

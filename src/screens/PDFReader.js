@@ -1,6 +1,6 @@
 import React from 'react';
 //import react-redux
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   Dimensions,
   StyleSheet,
@@ -10,9 +10,9 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import Pdf from 'react-native-pdf';
+//import Pdf from 'react-native-pdf';
 import {
   BACKGROUND_PRIMARY_DARK,
   BACKGROUND_DARK,
@@ -25,11 +25,11 @@ import {
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import axios from 'axios';
-const PDFScreen = ({route, navigation}) => {
+const PDFScreen = ({ route, navigation }) => {
   const [isComplete, setIsComplete] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [total, setTotal] = React.useState(1);
-  const {link, id} = route.params.item;
+  const { link, id } = route.params.item;
   const isDarkMode = useSelector(state => state.auth.isDarkMode);
   const [data, setData] = React.useState(null);
 
@@ -131,7 +131,7 @@ const PDFScreen = ({route, navigation}) => {
             {/*  <ActivityIndicator size="large" color={PRIMARY_COLOR} /> */}
           </View>
         )}
-        <Pdf
+        {/* <Pdf
           trustAllCerts={false}
           source={source}
           onLoadComplete={(numberOfPages, filePath) => {
@@ -181,7 +181,7 @@ const PDFScreen = ({route, navigation}) => {
               backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
             },
           ]}
-        />
+        /> */}
       </View>
     </SafeAreaView>
   );
