@@ -1,79 +1,76 @@
-import "core-js/stable/atob";
+import 'core-js/stable/atob'
 // In App.js in a new project
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react'
 
 import {
   NavigationContainer,
   LightTheme,
   DarkTheme,
-} from '@react-navigation/native';
-import { View } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
+} from '@react-navigation/native'
+import { View } from 'react-native'
+import { createStackNavigator } from '@react-navigation/stack'
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
-import { store } from './src/store';
+import { store } from './src/store'
 //redux
-import { useSelector, useDispatch, Provider } from 'react-redux';
+import { useSelector, useDispatch, Provider } from 'react-redux'
 //auth
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { setUser, setOneSignalId } from './src/store/auth';
+import { setUser, setOneSignalId } from './src/store/auth'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 //socket
-import { SocketContext, socket } from './src/contexts/SocketContext';
-
+import { SocketContext, socket } from './src/contexts/SocketContext'
 
 //axios
-import axios from 'axios';
-axios.defaults.baseURL = 'https://cmisocket.miteleferico.bo/api/v1';
+import axios from 'axios'
+axios.defaults.baseURL = 'https://cmisocket.miteleferico.bo/api/v1'
 axios.interceptors.response.use(
   function (response) {
-    return response;
+    return response
   },
   function (error) {
-    return Promise.reject(error);
+    return Promise.reject(error)
   },
-);
+)
 
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator } from '@react-navigation/drawer'
 
 //screens
-import HomeScreen from './src/screens/Home';
-import Users from './src/screens/Users';
-import Calendar from './src/screens/Calendar';
-import LoginScreen from './src/screens/Login';
-import DocumentsScreen from './src/screens/Documents';
-import LicensesScreen from './src/screens/Licenses';
-import SplashScreen from './src/screens/Splash';
+import HomeScreen from './src/screens/Home'
+import Users from './src/screens/Users'
+import Calendar from './src/screens/Calendar'
+import LoginScreen from './src/screens/Login'
+import DocumentsScreen from './src/screens/Documents'
+import LicensesScreen from './src/screens/Licenses'
+import SplashScreen from './src/screens/Splash'
 
 //ICONS
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { StatusBar, TouchableOpacity, StyleSheet } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import { StatusBar, TouchableOpacity, StyleSheet } from 'react-native'
 
 //One Signal
-
 
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
   PRIMARY_COLOR,
   PRIMARY_TEXT_DARK_LIGHT,
-} from './src/utils/constants';
-import DrawerMenu from './src/navigation/DrawerMenu';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+} from './src/utils/constants'
+import DrawerMenu from './src/navigation/DrawerMenu'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { usePushNotification } from './usePushNotification'
 
-const StackList = createStackNavigator();
-const Drawer = createDrawerNavigator();
-const Tab = createBottomTabNavigator();
-
-
+const StackList = createStackNavigator()
+const Drawer = createDrawerNavigator()
+const Tab = createBottomTabNavigator()
 
 const App = () => {
-
+  const { expoPushToken } = usePushNotification()
+  console.log('expoPushToken', expoPushToken)
 
   //OneSignal.Debug.setLogLevel(LogLevel.Verbose);
   /*   OneSignal.initialize("21fcaba8-c1d4-4ff9-bc5b-aecc55946b24");
@@ -83,11 +80,11 @@ const App = () => {
   
    */
   const RootNavigation = () => {
-    const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = React.useState(true);
+    const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = React.useState(true)
     const { loadingToken, isDarkMode, isLogged } = useSelector(
-      state => state.auth,
-    );
+      (state) => state.auth,
+    )
     //const scheme = useColorScheme();
 
     React.useEffect(() => {
@@ -100,7 +97,7 @@ const App = () => {
 
       //dispatch(setOneSignalId(userId));
 
-      const refreshToken = async token => {
+      const refreshToken = async (token) => {
         try {
           const response = await axios.post(
             '/auth/refresh',
@@ -110,23 +107,23 @@ const App = () => {
                 Authorization: 'Bearer ' + token,
               },
             },
-          );
-          dispatch(setUser(response.data));
-          setIsLoading(false);
+          )
+          dispatch(setUser(response.data))
+          setIsLoading(false)
         } catch (error) {
-          setIsLoading(false);
-          console.log(error);
+          setIsLoading(false)
+          console.log(error)
         }
-      };
-      AsyncStorage.getItem('token').then(token => {
+      }
+      AsyncStorage.getItem('token').then((token) => {
         //si el token es diferente de null entonces hacemos un refresh token
         if (token) {
-          refreshToken(token);
+          refreshToken(token)
         } else {
-          setIsLoading(false);
+          setIsLoading(false)
         }
-      });
-    }, []);
+      })
+    }, [])
 
     return (
       <>
@@ -151,30 +148,31 @@ const App = () => {
           )}
         </NavigationContainer>
       </>
-    );
-  };
-
+    )
+  }
 
   const AuthStack = () => {
     return (
       <StackList.Navigator
         screenOptions={({ navigation }) => ({
           headerShown: false,
-        })}>
+        })}
+      >
         <StackList.Screen name="Login" component={LoginScreen} />
       </StackList.Navigator>
-    );
-  };
+    )
+  }
   const LoadingStack = () => {
     return (
       <StackList.Navigator
         screenOptions={({ navigation }) => ({
           headerShown: false,
-        })}>
+        })}
+      >
         <StackList.Screen name="Splash" component={SplashScreen} />
       </StackList.Navigator>
-    );
-  };
+    )
+  }
 
   /*  useEffect(() => {
      OneSignal.setLogLevel(6, 0);
@@ -259,22 +257,20 @@ const App = () => {
   
   //oneSiqueryClientgnalConnect(); */
 
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient()
 
   return (
     <Provider store={store}>
       <SocketContext.Provider value={socket}>
         <QueryClientProvider client={queryClient}>
-
           <SafeAreaProvider>
             <RootNavigation />
           </SafeAreaProvider>
         </QueryClientProvider>
-
       </SocketContext.Provider>
     </Provider>
-  );
-};;
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -288,7 +284,6 @@ const styles = StyleSheet.create({
     padding: 8,
     borderRadius: 16,
   },
-});
+})
 
-export default App;
-
+export default App

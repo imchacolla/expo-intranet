@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react'
 import {
   StyleSheet,
   View,
@@ -8,19 +8,19 @@ import {
   TouchableOpacity,
   Text,
   Dimensions,
-  FlatList
-} from 'react-native';
-import { useSelector } from 'react-redux';
-import debounce from 'lodash/debounce';
-import _ from 'lodash';
+  FlatList,
+} from 'react-native'
+import { useSelector } from 'react-redux'
+import debounce from 'lodash/debounce'
+import _ from 'lodash'
 //import * as Animatable from 'react-native-animatable';
 //import use query
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query'
 
-import axios from 'axios';
-import Title from '../components/Title';
-import IonIcons from 'react-native-vector-icons/Ionicons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import axios from 'axios'
+import Title from '../components/Title'
+import IonIcons from 'react-native-vector-icons/Ionicons'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   PRIMARY_COLOR,
   SECONDARY_COLOR,
@@ -32,34 +32,33 @@ import {
   BACKGROUND_PRIMARY_LIGHT,
   PRIMARY_TEXT_DARK_LIGHT,
   TERTIARY_COLOR,
-} from '../utils/constants';
+} from '../utils/constants'
 //import dispatch
 //import { logout } from '../store/auth';
-import { setRefreshPage } from '../store/auth';
+import { setRefreshPage } from '../store/auth'
 
-import { useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux'
 
 const LicensesScreen = ({ route, navigation }) => {
-  const dispatch = useDispatch();
-  const refTextInputSearch = React.createRef();
-  const [refresh, onRefresh] = React.useState(false);
-  const { isDarkMode, refreshPage } = useSelector(state => state.auth);
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch()
+  const refTextInputSearch = React.createRef()
+  const [refresh, onRefresh] = React.useState(false)
+  const { isDarkMode, refreshPage } = useSelector((state) => state.auth)
+  const [loading, setLoading] = useState(false)
   //const [data, setData] = useState([]);
-  const [filterData, setFilterData] = React.useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(100);
-  const [q, setQ] = useState('');
-  const [total, setTotal] = useState(0);
-  const [uuid, setUuid] = useState(new Date());
-
+  const [filterData, setFilterData] = React.useState([])
+  const [page, setPage] = useState(1)
+  const [perPage, setPerPage] = useState(100)
+  const [q, setQ] = useState('')
+  const [total, setTotal] = useState(0)
+  const [uuid, setUuid] = useState(new Date())
 
   const getLicenses = async () => {
     const response = await axios.post('/rrhh/boletas', {
       q,
       page: 1,
       perPage,
-    });
+    })
     //console.log('response', response.data.data)
     return response.data.data
   }
@@ -68,30 +67,30 @@ const LicensesScreen = ({ route, navigation }) => {
     queryFn: getLicenses,
   })
   useEffect(() => {
-    setFilterData(queryLicenses?.data);
-  }, [queryLicenses?.data]);
+    setFilterData(queryLicenses?.data)
+  }, [queryLicenses?.data])
 
   const onEndReached = () => {
     if (page * perPage < total) {
-      setPage(page + 1);
+      setPage(page + 1)
     }
-    console.log('end reached');
-  };
+    console.log('end reached')
+  }
 
   const handleResetSearch = () => {
     //setData([]);
-    setQ('');
-    refTextInputSearch.current.clear();
-  };
+    setQ('')
+    refTextInputSearch.current.clear()
+  }
 
-  const changeHandler = q => {
-    setQ(q);
-  };
+  const changeHandler = (q) => {
+    setQ(q)
+  }
 
-  const debouncedChangeHandler = useCallback(debounce(changeHandler, 800), []);
+  const debouncedChangeHandler = useCallback(debounce(changeHandler, 800), [])
   const getItem = (data, index) => {
-    return data[index];
-  };
+    return data[index]
+  }
   const emptyView = () => {
     return (
       <View
@@ -100,16 +99,18 @@ const LicensesScreen = ({ route, navigation }) => {
           justifyContent: 'center',
           alignItems: 'center',
           marginTop: 20,
-        }}>
+        }}
+      >
         <Text
           style={{
             color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : PRIMARY_TEXT_LIGHT,
-          }}>
+          }}
+        >
           no se encontraron boletas de permiso
         </Text>
       </View>
-    );
-  };
+    )
+  }
   const renderItem = ({ item, index }) => {
     return (
       <View
@@ -127,13 +128,15 @@ const LicensesScreen = ({ route, navigation }) => {
           marginVertical: 5,
           marginHorizontal: 10,
           borderRadius: 10,
-        }}>
+        }}
+      >
         <View style={styles.description}>
           <Text
             style={[
               styles.nombre,
               { color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT },
-            ]}>
+            ]}
+          >
             {item.justificacion}
           </Text>
           <View
@@ -143,8 +146,9 @@ const LicensesScreen = ({ route, navigation }) => {
               borderRadius: 5,
               paddingHorizontal: 5,
               paddingVertical: 3,
-              marginVertical: 5
-            }}>
+              marginVertical: 5,
+            }}
+          >
             <Text
               style={[
                 styles.tipo,
@@ -152,9 +156,10 @@ const LicensesScreen = ({ route, navigation }) => {
                   color: isDarkMode
                     ? PRIMARY_TEXT_DARK_LIGHT
                     : PRIMARY_TEXT_LIGHT,
-                  fontWeight: 'bold'
+                  fontWeight: 'bold',
                 },
-              ]}>
+              ]}
+            >
               {item.tipo_boleta}
             </Text>
           </View>
@@ -163,9 +168,7 @@ const LicensesScreen = ({ route, navigation }) => {
               <IonIcons
                 name="ios-location"
                 size={16}
-                color={
-                  isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : "#999"
-                }
+                color={isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#999'}
               />
               <Text
                 style={[
@@ -175,7 +178,8 @@ const LicensesScreen = ({ route, navigation }) => {
                       ? PRIMARY_TEXT_DARK_LIGHT
                       : PRIMARY_TEXT_LIGHT,
                   },
-                ]}>
+                ]}
+              >
                 {item.destino}
               </Text>
             </View>
@@ -186,22 +190,24 @@ const LicensesScreen = ({ route, navigation }) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               marginTop: 5,
-            }}>
+            }}
+          >
             <IonIcons
               name="calendar"
-              size={16}
-              color={isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : "#999"}
+              size={14}
+              color={isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#333'}
             />
             <Text
               style={[
                 styles.hora,
                 {
-                  marginLeft: 5,
+                  marginLeft: 4,
                   color: isDarkMode
                     ? PRIMARY_TEXT_DARK_LIGHT
                     : PRIMARY_TEXT_LIGHT,
                 },
-              ]}>
+              ]}
+            >
               {item.fecha_ini} {item.hora_ini}
             </Text>
             <View style={{ width: 10 }}>
@@ -214,7 +220,8 @@ const LicensesScreen = ({ route, navigation }) => {
                       ? PRIMARY_TEXT_DARK_LIGHT
                       : PRIMARY_TEXT_LIGHT,
                   },
-                ]}>
+                ]}
+              >
                 {'-'}
               </Text>
             </View>
@@ -226,7 +233,8 @@ const LicensesScreen = ({ route, navigation }) => {
                     ? PRIMARY_TEXT_DARK_LIGHT
                     : PRIMARY_TEXT_LIGHT,
                 },
-              ]}>
+              ]}
+            >
               {item.fecha_fin == item.fecha_ini ? '' : item.fecha_fin}{' '}
               {item.hora_fin}
             </Text>
@@ -238,25 +246,40 @@ const LicensesScreen = ({ route, navigation }) => {
             alignItems: 'center',
             alignContent: 'space-around',
             alignSelf: 'center',
-          }}>
+          }}
+        >
           <View
             style={{
               width: 100,
-              borderRadius: 5,
+              borderRadius: 15,
               padding: 2,
               textAlign: 'center',
               alignSelf: 'center',
               alignItems: 'center',
-              borderColor: item.estado > 5 ? '#95D780' : item.estado == -2 ? 'red' : '#CFA9FC',
+              borderColor:
+                item.estado > 5
+                  ? PRIMARY_COLOR
+                  : item.estado == -2
+                  ? 'red'
+                  : '#CFA9FC',
               //borderColor: item.estado > 5 ? PRIMARY_COLOR : '#CFA9FC',
-              borderWidth: 1,
+              borderWidth: 0,
               //borderStyle: 'dotted',
-            }}>
+            }}
+          >
             <Text
               style={[
                 styles.estadoText,
-                { color: item.estado > 5 ? '#66C490' : '#6958AB' },
-              ]}>
+                {
+                  color:
+                    item.estado > 5
+                      ? isDarkMode
+                        ? '#f2f2f2'
+                        : PRIMARY_COLOR
+                      : '#686868',
+                },
+              ]}
+            >
               {item.estado_nombre}
             </Text>
           </View>
@@ -268,13 +291,15 @@ const LicensesScreen = ({ route, navigation }) => {
               justifyContent: 'center',
               width: 90,
               padding: 3,
-            }}>
+            }}
+          >
             <Text
               style={{
                 color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
                 fontSize: 11,
                 textAlign: 'center',
-              }}>
+              }}
+            >
               {item.aprobado_por}
             </Text>
             <Text
@@ -282,7 +307,8 @@ const LicensesScreen = ({ route, navigation }) => {
                 color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
                 fontSize: 11,
                 textAlign: 'center',
-              }}>
+              }}
+            >
               {item.fecha_aprobacion}
             </Text>
             {/* {item.ci?
@@ -300,35 +326,35 @@ const LicensesScreen = ({ route, navigation }) => {
           </View>
         </View>
       </View>
-    );
-  };
+    )
+  }
 
   const onRefreshHandle = () => {
-    console.log(new Date().toString());
-    dispatch(setRefreshPage(new Date().toString()));
-
+    console.log(new Date().toString())
+    dispatch(setRefreshPage(new Date().toString()))
   }
   //busqueda
   useEffect(() => {
-    const searchData = _.filter(queryLicenses?.data, item => {
+    const searchData = _.filter(queryLicenses?.data, (item) => {
       return (
         item.justificacion.toLowerCase().includes(q.toLowerCase()) ||
         item.tipo_boleta.toLowerCase().includes(q.toLowerCase()) ||
         item.destino.toLowerCase().includes(q.toLowerCase())
-      );
-    });
-    console.log('cantidad encontrada:', searchData.length);
-    setFilterData(searchData);
-  }, [q]);
+      )
+    })
+    console.log('cantidad encontrada:', searchData.length)
+    setFilterData(searchData)
+  }, [q])
   const footerList = () => {
-    return <View style={{ height: 75 }} />;
-  };
+    return <View style={{ height: 75 }} />
+  }
   return (
     <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
-      }}>
+      }}
+    >
       <View style={{ flex: 1 }}>
         <Title title="Permisos" navigation={navigation} />
         <View style={styles.viewSearch} level="3">
@@ -345,7 +371,8 @@ const LicensesScreen = ({ route, navigation }) => {
               width: Dimensions.get('window').width - 20,
               padding: 10,
               borderRadius: 20,
-            }}>
+            }}
+          >
             <IonIcons color={TERTIARY_COLOR} name="search" size={20} />
             <TextInput
               ref={refTextInputSearch}
@@ -363,16 +390,18 @@ const LicensesScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        {queryLicenses.isLoading ? <ActivityIndicator
-          size="large"
-          color={PRIMARY_COLOR}
-          style={styles.loader}
-        /> : (
+        {queryLicenses.isLoading ? (
+          <ActivityIndicator
+            size="large"
+            color={PRIMARY_COLOR}
+            style={styles.loader}
+          />
+        ) : (
           <FlatList
             data={filterData}
             initialNumToRender={10}
             renderItem={({ item, index }) => renderItem({ item, index })}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             onEndReached={onEndReached}
             ListFooterComponent={footerList}
             ListEmptyComponent={emptyView}
@@ -396,15 +425,16 @@ const LicensesScreen = ({ route, navigation }) => {
             flexDirection: 'row',
             justifyContent: 'center',
           }}
-          onPress={() => navigation.navigate('Boleta')}>
+          onPress={() => navigation.navigate('Boleta')}
+        >
           <IonIcons name="ios-add" size={32} color={'white'} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default LicensesScreen;
+export default LicensesScreen
 
 const styles = StyleSheet.create({
   loader: {
@@ -519,7 +549,7 @@ const styles = StyleSheet.create({
     height: 26,
   },
   tipo: {
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '400',
     textAlign: 'left',
     color: SECONDARY_COLOR,
@@ -529,4 +559,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
   },
-});
+})

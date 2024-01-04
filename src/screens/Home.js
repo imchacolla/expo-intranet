@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useCallback } from 'react'
 import {
   View,
   TouchableOpacity,
@@ -12,12 +12,12 @@ import {
   Alert,
   RefreshControl,
   ScrollView,
-} from 'react-native';
+} from 'react-native'
 
-import { useSelector, useDispatch } from 'react-redux';
-import axios from 'axios';
-import Title from '../components/Title';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
+import Title from '../components/Title'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 //import { Modalize } from 'react-native-modalize';
 //import { RenderHtml} from '../components/RenderPage';
 import {
@@ -29,84 +29,86 @@ import {
   PRIMARY_TEXT_DARK_LIGHT,
   PRIMARY_TEXT_LIGHT,
   BACKGROUND_PRIMARY_LIGHT,
-} from '../utils/constants';
-import { BottomSheetModal, BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import CarouselHome from '../components/CarouselHome';
-import ListVacations from '../components/ListVacations';
+} from '../utils/constants'
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import CarouselHome from '../components/CarouselHome'
+import ListVacations from '../components/ListVacations'
 
-const { width, height } = Dimensions.get('screen');
-const SPACING = 5;
+const { width, height } = Dimensions.get('screen')
+const SPACING = 5
 //const ITEM_SIZE = width * 0.38;
-const ITEM_SIZE = 125;
-const SPACER_ITEM_SIZE = (width - ITEM_SIZE) / 2;
+const ITEM_SIZE = 125
+const SPACER_ITEM_SIZE = (width - ITEM_SIZE) / 2
 
 const HomeScreen = ({ navigation }) => {
-  const ci = useSelector(state => state.auth.ci);
-  const isDarkMode = useSelector(state => state.auth.isDarkMode);
-  const [pause, setPause] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(null);
-  const [birthdays, setBirthdays] = useState([]);
-  const [totalVacations, setTotalVacations] = useState(0);
-  const [nextVacation, setNextVacation] = useState(null);
-  const [vacations, setVacations] = useState([]);
-  const [listaVacaciones, setListaVacaciones] = useState([]);
+  const ci = useSelector((state) => state.auth.ci)
+  const isDarkMode = useSelector((state) => state.auth.isDarkMode)
+  const [pause, setPause] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const [data, setData] = useState(null)
+  const [birthdays, setBirthdays] = useState([])
+  const [totalVacations, setTotalVacations] = useState(0)
+  const [nextVacation, setNextVacation] = useState(null)
+  const [vacations, setVacations] = useState([])
+  const [listaVacaciones, setListaVacaciones] = useState([])
   //show modal
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false)
 
-
-  const wait = timeout => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-  };
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout))
+  }
   const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    getVacations();
-    getBirtdays();
-    getNextVacation();
-    getData();
-    wait(500).then(() => setRefreshing(false));
-  }, []);
+    setRefreshing(true)
+    getVacations()
+    getBirtdays()
+    getNextVacation()
+    getData()
+    wait(500).then(() => setRefreshing(false))
+  }, [])
 
   //datos del usuario
   const getData = async () => {
-    setIsLoading(true);
-    const response = await axios.get('/auth/info');
-    setData(response.data.data);
-    setTotalVacations(response.data.vacation);
-    setIsLoading(false);
+    setIsLoading(true)
+    const response = await axios.get('/auth/info')
+    setData(response.data.data)
+    setTotalVacations(response.data.vacation)
+    setIsLoading(false)
     //console.log (response.data.data);
-  };
+  }
   //proxmimos cumpleañeros
 
   const getVacations = async () => {
-    const response = await axios.get('/rrhh/vacations-programed');
-    setVacations(response.data.data);
-    return response.data.data;
-  };
+    const response = await axios.get('/rrhh/vacations-programed')
+    setVacations(response.data.data)
+    return response.data.data
+  }
 
   const getBirtdays = async () => {
-    const response = await axios.get('/rrhh/birthdays');
-    setBirthdays(response.data.data);
-    return response.data.data;
-  };
+    const response = await axios.get('/rrhh/birthdays')
+    setBirthdays(response.data.data)
+    return response.data.data
+  }
 
   const getChart = async () => {
-    const response = await axios.get('/rrhh/person-bar');
-    setDataChart(response.data.data);
+    const response = await axios.get('/rrhh/person-bar')
+    setDataChart(response.data.data)
     //console.log(response.data.data);
-  };
+  }
   const getNextVacation = async () => {
-    const response = await axios.get('/rrhh/next-vacation');
+    const response = await axios.get('/rrhh/next-vacation')
     //console.log(response.data.data);
-    setNextVacation(response.data.data);
-    setRefreshing(false);
-  };
+    setNextVacation(response.data.data)
+    setRefreshing(false)
+  }
 
   const getPasajeros = async () => {
     try {
-      const response = await axios.get('/pasajeros/gestioneslinea/0');
-      const datos = response.data.data.map(p => {
+      const response = await axios.get('/pasajeros/gestioneslinea/0')
+      const datos = response.data.data.map((p) => {
         return {
           value: p.cantidad / 1000000,
           label: p.gestion,
@@ -116,20 +118,21 @@ const HomeScreen = ({ navigation }) => {
                 color: isDarkMode ? '#cccccc' : '#333',
                 fontSize: 10,
                 marginBottom: 6,
-              }}>
+              }}
+            >
               {(p.cantidad / 1000000).toFixed(1)}
             </Text>
           ),
-        };
-      });
+        }
+      })
 
-      setPasajeros(datos);
-    } catch (error) { }
-  };
+      setPasajeros(datos)
+    } catch (error) {}
+  }
   const renderHtml = () => {
-    navigation.push('html');
-  };
-  const customLabel = val => {
+    navigation.push('html')
+  }
+  const customLabel = (val) => {
     return (
       <View style={{ width: 70, marginLeft: 7 }}>
         <Text
@@ -139,19 +142,19 @@ const HomeScreen = ({ navigation }) => {
             //transform: [{rotateZ: '-45deg'}],
             fontSize: 10,
             marginLeft: -6,
-          }}>
+          }}
+        >
           {val}
         </Text>
       </View>
-    );
-  };
+    )
+  }
 
-
-  const getPasajerosMes = async gestion => {
+  const getPasajerosMes = async (gestion) => {
     try {
-      setPasajerosMes([]);
-      const response = await axios.get('/pasajeros/mes/' + gestion);
-      const datos = response.data.data.map(p => {
+      setPasajerosMes([])
+      const response = await axios.get('/pasajeros/mes/' + gestion)
+      const datos = response.data.data.map((p) => {
         return {
           value: p.cantidad / 1000000,
           label: p.mes_letra,
@@ -161,7 +164,8 @@ const HomeScreen = ({ navigation }) => {
                 color: isDarkMode ? '#cccccc' : '#333',
                 fontSize: 10,
                 marginBottom: 6,
-              }}>
+              }}
+            >
               {(p.cantidad / 1000000).toFixed(1)}
             </Text>
           ),
@@ -178,71 +182,72 @@ const HomeScreen = ({ navigation }) => {
                   paddingVertical: 1,
                   borderRadius: 2,
                   marginTop: -15,
-                }}>
+                }}
+              >
                 <Text
                   style={{
                     color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
                     fontSize: 12,
                     fontWeight: '500',
-                  }}>
+                  }}
+                >
                   {(p.cantidad / 1000000).toFixed(1)}
                 </Text>
               </View>
-            );
+            )
           },
-        };
-      });
+        }
+      })
 
-      setPasajerosMes(datos);
+      setPasajerosMes(datos)
       //console.log(datos);
-    } catch (error) { }
-  };
+    } catch (error) {}
+  }
 
-  const getChartMeses = barchar => {
-    getPasajerosMes(barchar.label);
-    setModalVisibleGestion(true);
-    setGestion(barchar.label);
-    console.log('barchar', barchar.label);
-  };
+  const getChartMeses = (barchar) => {
+    getPasajerosMes(barchar.label)
+    setModalVisibleGestion(true)
+    setGestion(barchar.label)
+    console.log('barchar', barchar.label)
+  }
 
-  const bottomSheetRef = useRef(null);
+  const bottomSheetRef = useRef(null)
 
   // variables
-  const snapPoints = useMemo(() => ['30%', '40%', '55%'], []);
+  const snapPoints = useMemo(() => ['30%', '40%', '55%'], [])
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetRef.current?.present();
-  }, []);
+    bottomSheetRef.current?.present()
+  }, [])
   const getVacationsLista = async () => {
     try {
-      const response = await axios.get(`/rrhh/vacations`);
-      const data = response.data.data;
-      setListaVacaciones(data);
-      console.log('data', data);
+      const response = await axios.get(`/rrhh/vacations`)
+      const data = response.data.data
+      setListaVacaciones(data)
+      console.log('data', data)
 
-      const total = _.sumBy(data, 'total_dias');
+      const total = _.sumBy(data, 'total_dias')
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  };
+  }
 
   useEffect(() => {
-    getData();
-    getVacations();
-    getBirtdays();
-    getVacationsLista();
+    getData()
+    getVacations()
+    getBirtdays()
+    getVacationsLista()
 
-    getNextVacation();
-
-  }, []);
+    getNextVacation()
+  }, [])
 
   //Modal
-  const deviceWidth = Dimensions.get('screen').width;
-  const deviceHeight = Dimensions.get('screen').height;
+  const deviceWidth = Dimensions.get('screen').width
+  const deviceHeight = Dimensions.get('screen').height
 
-  const scrollX = React.useRef(new Animated.Value(0)).current;
+  const scrollX = React.useRef(new Animated.Value(0)).current
   //const scrollX = new Animated.Value (0);
   if (isLoading) {
-    return <ActivityIndicator color={PRIMARY_COLOR} />;
+    return <ActivityIndicator color={PRIMARY_COLOR} />
   }
   return (
     <BottomSheetModalProvider>
@@ -250,12 +255,14 @@ const HomeScreen = ({ navigation }) => {
         style={{
           flex: 1,
           backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
-        }}>
+        }}
+      >
         <ScrollView
           contentContainerStyle={styles.scrollView}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }>
+          }
+        >
           <Title title="Inicio" navigation={navigation} />
 
           <View style={{}}>
@@ -271,7 +278,8 @@ const HomeScreen = ({ navigation }) => {
                 marginHorizontal: 5,
                 paddingHorizontal: 5,
                 borderRadius: 10,
-              }}>
+              }}
+            >
               <View style={{ flexDirection: 'row' }}>
                 <Image
                   source={{
@@ -294,7 +302,8 @@ const HomeScreen = ({ navigation }) => {
                           ? PRIMARY_TEXT_DARK
                           : PRIMARY_TEXT_LIGHT,
                       },
-                    ]}>
+                    ]}
+                  >
                     {data.nombres}
                   </Text>
                   <Text
@@ -305,7 +314,8 @@ const HomeScreen = ({ navigation }) => {
                           ? PRIMARY_TEXT_DARK
                           : PRIMARY_TEXT_LIGHT,
                       },
-                    ]}>
+                    ]}
+                  >
                     {data.apellidos}
                   </Text>
                   <Text
@@ -316,7 +326,8 @@ const HomeScreen = ({ navigation }) => {
                           ? PRIMARY_TEXT_DARK
                           : PRIMARY_TEXT_LIGHT,
                       },
-                    ]}>
+                    ]}
+                  >
                     {data.cargo}
                   </Text>
                 </View>
@@ -328,15 +339,28 @@ const HomeScreen = ({ navigation }) => {
                   borderTopWidth: 1,
                   borderTopColor: PRIMARY_COLOR,
                   marginTop: 8,
-                }}>
+                }}
+              >
                 <TouchableOpacity onPress={() => renderHtml()}>
                   <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.vacations}>{totalVacations}</Text>
+                    <Text
+                      style={[
+                        styles.vacations,
+                        {
+                          color: isDarkMode ? '#f2f2f2' : '#333',
+                        },
+                      ]}
+                    >
+                      {totalVacations}
+                    </Text>
                     <Text
                       style={[
                         styles.descriptionVacation,
-                        { color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#666' },
-                      ]}>
+                        {
+                          color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#666',
+                        },
+                      ]}
+                    >
                       Días de vacación disponible
                     </Text>
                   </View>
@@ -344,9 +368,19 @@ const HomeScreen = ({ navigation }) => {
                 {nextVacation?.map((v, i) => (
                   <TouchableOpacity
                     onPress={() => handlePresentModalPress()}
-                    key={i}>
+                    key={i}
+                  >
                     <View style={{ flexDirection: 'row' }} key={i}>
-                      <Text style={styles.vacations}>{v.dias}</Text>
+                      <Text
+                        style={[
+                          styles.vacations,
+                          {
+                            color: isDarkMode ? '#f2f2f2' : '#333',
+                          },
+                        ]}
+                      >
+                        {v.dias}
+                      </Text>
                       <Text
                         style={[
                           styles.descriptionVacation,
@@ -355,7 +389,8 @@ const HomeScreen = ({ navigation }) => {
                               ? PRIMARY_TEXT_DARK_LIGHT
                               : '#666',
                           },
-                        ]}>
+                        ]}
+                      >
                         Prox. programación {v.fecha_ini}
                       </Text>
                     </View>
@@ -369,14 +404,16 @@ const HomeScreen = ({ navigation }) => {
                 flexDirection: 'row',
                 marginTop: 10,
                 alignContent: 'center',
-              }}>
+              }}
+            >
               <Text
                 style={[
                   styles.subtitle,
                   {
                     color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
                   },
-                ]}>
+                ]}
+              >
                 Próximos cumpleaños
               </Text>
             </View>
@@ -405,19 +442,19 @@ const HomeScreen = ({ navigation }) => {
                     (index - 1) * ITEM_SIZE,
                     index * ITEM_SIZE,
                     (index + 1) * ITEM_SIZE,
-                  ];
+                  ]
                   const opacity = scrollX.interpolate({
                     inputRange,
                     outputRange: [1, 1, 0.5],
-                  });
+                  })
                   const translateY = scrollX.interpolate({
                     inputRange,
                     outputRange: [0, 0, 50],
-                  });
+                  })
                   const scale = scrollX.interpolate({
                     inputRange,
                     outputRange: [1, 1, 0.5],
-                  });
+                  })
 
                   return (
                     <View style={{ width: ITEM_SIZE }}>
@@ -427,7 +464,8 @@ const HomeScreen = ({ navigation }) => {
                           transform: [{ scale }],
                           elevation: 1,
                           //scale,
-                        }}>
+                        }}
+                      >
                         <View
                           style={{
                             marginHorizontal: SPACING,
@@ -440,7 +478,8 @@ const HomeScreen = ({ navigation }) => {
                               : BACKGROUND_PRIMARY_LIGHT,
                             borderRadius: 10,
                             minHeight: 160,
-                          }}>
+                          }}
+                        >
                           <Image
                             source={{
                               uri:
@@ -465,7 +504,8 @@ const HomeScreen = ({ navigation }) => {
                                 color: isDarkMode
                                   ? PRIMARY_TEXT_DARK
                                   : PRIMARY_TEXT_LIGHT,
-                              }}>
+                              }}
+                            >
                               {item.nombre}
                             </Text>
                             <View style={styles.itemFecha}>
@@ -473,9 +513,10 @@ const HomeScreen = ({ navigation }) => {
                                 style={[
                                   styles.textFecha,
                                   {
-                                    color: PRIMARY_COLOR,
+                                    color: isDarkMode ? '#f2f2f2' : '#333',
                                   },
-                                ]}>
+                                ]}
+                              >
                                 {item.fecha}
                               </Text>
                             </View>
@@ -483,7 +524,7 @@ const HomeScreen = ({ navigation }) => {
                         </View>
                       </Animated.View>
                     </View>
-                  );
+                  )
                 }}
               />
             ) : null}
@@ -496,20 +537,23 @@ const HomeScreen = ({ navigation }) => {
               marginTop: 10,
               alignContent: 'center',
               marginRight: 10,
-            }}>
+            }}
+          >
             <Text
               style={[
                 styles.subtitle,
                 {
                   color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
                 },
-              ]}>
+              ]}
+            >
               Anuncios
             </Text>
             <TouchableOpacity
               onPress={() => {
-                setPause(!pause);
-              }}>
+                setPause(!pause)
+              }}
+            >
               <AntDesign
                 name={pause ? 'pausecircle' : 'caretright'}
                 size={24}
@@ -534,7 +578,7 @@ const HomeScreen = ({ navigation }) => {
             borderRadius: 20,
             backgroundColor: isDarkMode ? BACKGROUND_PRIMARY_DARK : 'white',
           }}
-        //onChange={handleSheetChanges}
+          //onChange={handleSheetChanges}
         >
           <View
             style={[
@@ -544,14 +588,15 @@ const HomeScreen = ({ navigation }) => {
                   ? BACKGROUND_PRIMARY_DARK
                   : BACKGROUND_PRIMARY_LIGHT,
               },
-            ]}>
+            ]}
+          >
             <ListVacations vacations={vacations} isDarkMode={isDarkMode} />
           </View>
         </BottomSheetModal>
       </SafeAreaView>
     </BottomSheetModalProvider>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -592,7 +637,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
     marginLeft: 0,
-    color: PRIMARY_COLOR,
+
     marginBottom: 0,
   },
   descriptionVacation: {
@@ -692,6 +737,6 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     //justifyContent: 'center',
   },
-});
+})
 
-export default HomeScreen;
+export default HomeScreen

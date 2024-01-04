@@ -1,7 +1,7 @@
-import {StyleSheet, Text, View, Dimensions} from 'react-native';
-import React, {useState} from 'react';
-import {Dropdown} from 'react-native-element-dropdown';
-import AntDesign from 'react-native-vector-icons/AntDesign';
+import { StyleSheet, Text, View, Dimensions } from 'react-native'
+import React, { useState } from 'react'
+import { Dropdown } from 'react-native-element-dropdown'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import {
   PRIMARY_TEXT,
   PRIMARY_COLOR,
@@ -12,30 +12,49 @@ import {
   BACKGROUND_LIGHT,
   BACKGROUND_PRIMARY_DARK,
   BACKGROUND_PRIMARY_LIGHT,
-} from '../utils/constants';
+} from '../utils/constants'
 
-const SelectBoleta = ({data, isDarkMode, setSelectValue, value}) => {
-  const [isFocus, setIsFocus] = useState(false);
+const SelectBoleta = ({ data, isDarkMode, setSelectValue, value }) => {
+  const [isFocus, setIsFocus] = useState(false)
   const renderItem = (item, index) => {
     return (
-      <View style={[styles.item,{
-        borderBottomColor: isDarkMode ? "#222" : "#efefef",
-        borderBottomWidth: 0,
-        marginHorizontal: 5,
-        backgroundColor: item.id === value ? isDarkMode ? "#222" : "#efefef" : 'transparent',
-        borderRadius: 5
-
-
-      }]}>
+      <View
+        style={[
+          styles.item,
+          {
+            borderBottomColor: isDarkMode ? '#222' : '#efefef',
+            borderBottomWidth: 0,
+            marginHorizontal: 5,
+            backgroundColor:
+              item.id === value
+                ? isDarkMode
+                  ? '#222'
+                  : '#efefef'
+                : 'transparent',
+            borderRadius: 5,
+            paddingVertical: 2,
+            paddingHorizontal: 1,
+            //borderBottomWidth: 1,
+            //borderBottomColor: '#ccc',
+          },
+        ]}
+      >
         <Text
           style={[
             styles.textItem,
             {
-              color: item.id === value ? isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT : isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : PRIMARY_TEXT_LIGHT,
+              color:
+                item.id === value
+                  ? isDarkMode
+                    ? PRIMARY_TEXT_DARK
+                    : PRIMARY_TEXT_LIGHT
+                  : isDarkMode
+                  ? PRIMARY_TEXT_DARK_LIGHT
+                  : PRIMARY_TEXT_LIGHT,
               fontWeight: item.id === value ? '500' : '400',
-
             },
-          ]}>
+          ]}
+        >
           {item.name}
         </Text>
         {/* {item.id === value && (
@@ -47,13 +66,15 @@ const SelectBoleta = ({data, isDarkMode, setSelectValue, value}) => {
           />
         )} */}
       </View>
-    );
-  };
+    )
+  }
   return (
-    <View style={{
-        borderBottomColor: isDarkMode ? "#666" : PRIMARY_TEXT_LIGHT,
+    <View
+      style={{
+        borderBottomColor: isDarkMode ? '#666' : PRIMARY_TEXT_LIGHT,
         borderBottomWidth: 1,
-    }}>
+      }}
+    >
       <Dropdown
         style={[
           styles.dropdown,
@@ -67,11 +88,10 @@ const SelectBoleta = ({data, isDarkMode, setSelectValue, value}) => {
           color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : PRIMARY_TEXT_LIGHT,
           left: 5,
           maxHeight: 40,
-          
         }}
         selectedTextStyle={{
           color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-          textAlign: 'left',          
+          textAlign: 'left',
           maxHeight: 40,
           fontSize: 14,
         }}
@@ -80,10 +100,10 @@ const SelectBoleta = ({data, isDarkMode, setSelectValue, value}) => {
             ? BACKGROUND_PRIMARY_DARK
             : BACKGROUND_PRIMARY_LIGHT,
           color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : PRIMARY_TEXT_LIGHT,
-          borderWidth:0,
-          padding:3,
+          borderWidth: 0,
+          padding: 3,
           borderBottomLeftRadius: 10,
-            borderBottomRightRadius: 10,
+          borderBottomRightRadius: 10,
         }}
         itemContainerStyle={{
           backgroundColor: isDarkMode
@@ -109,16 +129,16 @@ const SelectBoleta = ({data, isDarkMode, setSelectValue, value}) => {
         value={value}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
-        onChange={item => {
-          setSelectValue(item.id);
-          setIsFocus(false);
+        onChange={(item) => {
+          setSelectValue(item.id)
+          setIsFocus(false)
         }}
       />
     </View>
-  );
-};
+  )
+}
 
-export default SelectBoleta;
+export default SelectBoleta
 
 const styles = StyleSheet.create({
   groupInput: {
@@ -136,11 +156,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginLeft: 5,
   },
-//   textBtn: {
-//     width: Dimensions.get('window').width - 40,
-//     alignSelf: 'center',
-//     textAlign: 'center',
-//     color: 'white',
-//     fontWeight: 'bold',
-//   },
-});
+  //   textBtn: {
+  //     width: Dimensions.get('window').width - 40,
+  //     alignSelf: 'center',
+  //     textAlign: 'center',
+  //     color: 'white',
+  //     fontWeight: 'bold',
+  //   },
+})

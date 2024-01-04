@@ -1,4 +1,4 @@
-package bo.miteleferico.intranetappi;
+package com.exporrhh;
 
 import android.app.Application;
 import android.content.res.Configuration;

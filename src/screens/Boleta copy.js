@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
-  Platform,
 } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -264,20 +263,6 @@ const BoletaScreen = ({ navigation }) => {
     setDate3(currentDate)
     const horaInicio = moment(currentDate)
     setHoraInicio(horaInicio.format('HH:mm'))
-  }
-  const onChangeFechaFin = (event, selectedDate) => {
-    const currentDate = selectedDate || date
-    setOpen2(false)
-    setDate2(currentDate)
-    const fechaFin = moment(currentDate)
-    setFechaFin(fechaFin.format('DD-MM-YYYY'))
-  }
-  const onChangeHoraFin = (event, selectedDate) => {
-    const currentDate = selectedDate || date3
-    setOpen4(false)
-    setDate4(currentDate)
-    const horaInicio = moment(currentDate)
-    setHoraFin(horaInicio.format('HH:mm'))
   }
 
   return (
@@ -560,35 +545,24 @@ const BoletaScreen = ({ navigation }) => {
                   >
                     Fecha Inicio:
                   </Text>
-                  {Platform.OS === 'android' && (
-                    <>
-                      <TouchableOpacity onPress={() => setOpen(true)}>
-                        <View style={[styles.datetime, {}]}>
-                          <AntDesign name="calendar" size={20} color="#666" />
-                          <Text
-                            style={[
-                              {
-                                color: isDarkMode
-                                  ? PRIMARY_TEXT_DARK
-                                  : PRIMARY_TEXT_LIGHT,
-                              },
-                            ]}
-                          >
-                            {fechaInicio}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                      {open && (
-                        <DateTimePicker
-                          testID="dateTimePicker"
-                          value={date}
-                          onChange={onChangeFechaInicio}
-                          themeVariant={isDarkMode ? 'dark' : 'light'}
-                        />
-                      )}
-                    </>
-                  )}
-                  {Platform.OS === 'ios' && (
+                  <TouchableOpacity onPress={() => setOpen(true)}>
+                    <View style={[styles.datetime, {}]}>
+                      <AntDesign name="calendar" size={20} color="#666" />
+                      <Text
+                        style={[
+                          styles.txtDateTime,
+                          {
+                            color: isDarkMode
+                              ? PRIMARY_TEXT_DARK
+                              : PRIMARY_TEXT_LIGHT,
+                          },
+                        ]}
+                      >
+                        {fechaInicio}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                  {open && (
                     <DateTimePicker
                       testID="dateTimePicker"
                       value={date}
@@ -636,45 +610,27 @@ const BoletaScreen = ({ navigation }) => {
                     >
                       Hora Inicio:
                     </Text>
-                    {Platform.OS === 'android' && (
-                      <>
-                        <TouchableOpacity onPress={() => setOpen3(true)}>
-                          <View style={[styles.datetime, {}]}>
-                            <AntDesign
-                              name="clockcircleo"
-                              size={20}
-                              color="#666"
-                            />
-                            <Text
-                              style={[
-                                styles.txtDateTime,
-                                {
-                                  color: isDarkMode
-                                    ? PRIMARY_TEXT_DARK
-                                    : PRIMARY_TEXT_LIGHT,
-                                },
-                              ]}
-                            >
-                              {horaInicio}
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                        {open3 && (
-                          <DateTimePicker
-                            testID="hora_inicio"
-                            value={date3}
-                            onChange={onChangeHoraInicio}
-                            mode="time"
-                            is24Hour={true}
-                            themeVariant={isDarkMode ? 'dark' : 'light'}
-                          />
-                        )}
-                      </>
-                    )}
-                    {Platform.OS === 'ios' && (
+                    <TouchableOpacity onPress={() => setOpen3(true)}>
+                      <View style={[styles.datetime, {}]}>
+                        <AntDesign name="clockcircleo" size={20} color="#666" />
+                        <Text
+                          style={[
+                            styles.txtDateTime,
+                            {
+                              color: isDarkMode
+                                ? PRIMARY_TEXT_DARK
+                                : PRIMARY_TEXT_LIGHT,
+                            },
+                          ]}
+                        >
+                          {horaInicio}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    {open3 && (
                       <DateTimePicker
                         testID="hora_inicio"
-                        value={date3}
+                        value={new Date()}
                         onChange={onChangeHoraInicio}
                         mode="time"
                         is24Hour={true}
@@ -730,43 +686,24 @@ const BoletaScreen = ({ navigation }) => {
                     >
                       Fecha Fin:
                     </Text>
-                    {Platform.OS === 'android' && (
-                      <>
-                        <TouchableOpacity onPress={() => setOpen2(true)}>
-                          <View style={[styles.datetime, {}]}>
-                            <AntDesign name="calendar" size={20} color="#666" />
-                            <Text
-                              style={[
-                                styles.txtDateTime,
-                                {
-                                  color: isDarkMode
-                                    ? PRIMARY_TEXT_DARK
-                                    : PRIMARY_TEXT_LIGHT,
-                                },
-                              ]}
-                            >
-                              {fechaFin}
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                        {open2 && (
-                          <DateTimePicker
-                            testID="dateTimePicker"
-                            value={date2}
-                            onChange={onChangeFechaFin}
-                            themeVariant={isDarkMode ? 'dark' : 'light'}
-                          />
-                        )}
-                      </>
-                    )}
-                    {Platform.OS === 'ios' && (
-                      <DateTimePicker
-                        testID="dateTimePickerFF"
-                        value={date2}
-                        onChange={onChangeFechaFin}
-                        themeVariant={isDarkMode ? 'dark' : 'light'}
-                      />
-                    )}
+
+                    <TouchableOpacity onPress={() => setOpen2(true)}>
+                      <View style={[styles.datetime, {}]}>
+                        <AntDesign name="calendar" size={20} color="#666" />
+                        <Text
+                          style={[
+                            styles.txtDateTime,
+                            {
+                              color: isDarkMode
+                                ? PRIMARY_TEXT_DARK
+                                : PRIMARY_TEXT_LIGHT,
+                            },
+                          ]}
+                        >
+                          {fechaFin}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
                     {/*  <DatePicker
                       key="fecha_fin"
                       title={'Fecha fin:'}
@@ -806,51 +743,27 @@ const BoletaScreen = ({ navigation }) => {
                       >
                         Hora Fin:
                       </Text>
-                      {Platform.OS === 'android' && (
-                        <>
-                          <TouchableOpacity onPress={() => setOpen4(true)}>
-                            <View style={[styles.datetime]}>
-                              <AntDesign
-                                name="clockcircleo"
-                                size={20}
-                                color="#666"
-                              />
-                              <Text
-                                style={[
-                                  styles.txtDateTime,
-                                  {
-                                    color: isDarkMode
-                                      ? PRIMARY_TEXT_DARK
-                                      : PRIMARY_TEXT_LIGHT,
-                                  },
-                                ]}
-                              >
-                                {horaFin}
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                          {open4 && (
-                            <DateTimePicker
-                              testID="hora_fin"
-                              value={date4}
-                              onChange={onChangeHoraFin}
-                              mode="time"
-                              is24Hour={true}
-                              themeVariant={isDarkMode ? 'dark' : 'light'}
-                            />
-                          )}
-                        </>
-                      )}
-                      {Platform.OS === 'ios' && (
-                        <DateTimePicker
-                          testID="hora_fin"
-                          value={date4}
-                          onChange={onChangeHoraFin}
-                          mode="time"
-                          is24Hour={true}
-                          themeVariant={isDarkMode ? 'dark' : 'light'}
-                        />
-                      )}
+                      <TouchableOpacity onPress={() => setOpen4(true)}>
+                        <View style={[styles.datetime]}>
+                          <AntDesign
+                            name="clockcircleo"
+                            size={20}
+                            color="#666"
+                          />
+                          <Text
+                            style={[
+                              styles.txtDateTime,
+                              {
+                                color: isDarkMode
+                                  ? PRIMARY_TEXT_DARK
+                                  : PRIMARY_TEXT_LIGHT,
+                              },
+                            ]}
+                          >
+                            {horaFin}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                       {/* <DatePicker
                         key="hora_fin"
                         title={'Hora fin:'}

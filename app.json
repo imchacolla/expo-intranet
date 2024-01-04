@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "expo-rrhh",
+    "name": "AppiMT",
     "slug": "expo-rrhh",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#E9E9E9"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -24,20 +24,34 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "bo.miteleferico.intranetappi"
+      "googleServicesFile":"./google-services.json",
+      "package": "bo.miteleferico.intranetappi"    
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      [
-        "onesignal-expo-plugin",
-        {
-          "mode": "development",
-          "devTeam": "dtsi",
-          "iPhoneDeploymentTarget": "13.0"
-        }
-      ]
-    ]
+    "plugins": [    
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf" 
+    ],
+    "extra": {
+      "eas": {
+        "build": {
+          "development":{
+            "developmentClient":true,
+            "distribution" : "internal"
+          },
+          "preview": {
+            "ios": {
+              "simulator" :true
+            },
+            "android": {
+              "buildType": "apk"
+            }
+          }
+        },
+        "projectId": "17bc0b3f-201b-47f5-a300-f7b9f0f74881"
+      }
+    }
   }
 }
