@@ -6,7 +6,7 @@ import { Appearance } from 'react-native'
 
 //export const PRIMARY_TEXT = isDarkMode === 'dark' ? '#F5F5F5' : '#141414';
 //export const PRIMARY_BACKGROUND = isDarkMode === 'dark' ? '#3D3D3E' : '#ffffff';
-export const PRIMARY_COLOR = '#2A48DE'
+export const PRIMARY_COLOR = '#0057FE'
 //export const PRIMARY_COLOR = '#4B46E6';
 //export const PRIMARY_COLOR = '#547feb';
 export const PRIMARY_TEXT = '#424242'
@@ -17,7 +17,8 @@ export const TERTIARY_COLOR = '#979797'
 export const PRIMARY_TEXT_DARK_LIGHT = '#999999'
 export const PRIMARY_TEXT_DARK = '#F5F5F5'
 export const PRIMARY_TEXT_LIGHT = '#424242'
-
+//export const BACKGROUND_ORURO = '#C01A51'
+export const BACKGROUND_ORURO = '#4f0509'
 export const BACKGROUND_DARK = '#181A20'
 //export const BACKGROUND_DARK = '#1a1a1a';
 export const BACKGROUND_LIGHT = '#ececec'

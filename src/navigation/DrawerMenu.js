@@ -1,17 +1,24 @@
-import { Text, View, Dimensions, Image, TouchableOpacity, Switch } from 'react-native';
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {
+  Text,
+  View,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  Switch,
+} from 'react-native'
+import React, { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
   DrawerItem,
-} from '@react-navigation/drawer';
+} from '@react-navigation/drawer'
 import axios from 'axios'
-import AntDesign from '@expo/vector-icons/AntDesign';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import AntDesign from '@expo/vector-icons/AntDesign'
+import Ionicons from '@expo/vector-icons/Ionicons'
 //store
-import { logout } from '../store/auth';
+import { logout } from '../store/auth'
 import {
   PRIMARY_COLOR,
   PRIMARY_TEXT_DARK_LIGHT,
@@ -22,18 +29,20 @@ import {
   PRIMARY_TEXT_DARK,
   BACKGROUND_PRIMARY_LIGHT,
   BACKGROUND_PRIMARY_DARK_LIGHT,
-} from '../utils/constants';
+} from '../utils/constants'
 
 //import stacks
-import HomeStackScreen from '../stacks/HomeStackScreen';
-import SigecStackScreen from '../stacks/SigecStackScreen';
-import AlmacenStackScreen from '../stacks/AlmacenStackScreen';
-import SettingStackScreen from '../stacks/SettingStackScreen';
-import LicenseStackScreen from '../stacks/LicenseStackScreen';
-import CmiStackScreen from '../stacks/CmiStackScreen';
+import HomeStackScreen from '../stacks/HomeStackScreen'
+import SigecStackScreen from '../stacks/SigecStackScreen'
+import AlmacenStackScreen from '../stacks/AlmacenStackScreen'
+import ParqueStackScreen from '../stacks/ParqueStackScreen'
+import LicenseStackScreen from '../stacks/LicenseStackScreen'
+import CmiStackScreen from '../stacks/CmiStackScreen'
+import ComunicadosStackScreen from '../stacks/ComunicadosStackScreen'
+import OruroStackScreen from '../stacks/OruroStackScreen'
 //ICONS
-import { setTheme } from '../store/auth';
-const Drawer = createDrawerNavigator();
+import { setTheme } from '../store/auth'
+const Drawer = createDrawerNavigator()
 
 const MENUs = [
   {
@@ -51,19 +60,41 @@ const MENUs = [
     icon: 'ios-bar-chart-outline',
   },
   {
+    name: 'Parque',
+    label: 'Parque de las Culturas',
+    rol: [4, 5, 6, 7],
+    id: 3,
+    icon: 'pie-chart-outline',
+  },
+  {
+    name: 'Oruro',
+    label: 'Teleférico turístico Oruro',
+    rol: [4, 5, 6, 7],
+    id: 4,
+    icon: 'bar-chart-outline',
+  },
+  {
     name: 'Sigec',
     label: 'Correspondencia',
     rol: [1, 2, 3, 4, 5, 6, 7],
-    id: 3,
+    id: 5,
     icon: 'ios-document-attach-outline',
   },
   {
     name: 'Approve',
     label: 'Aprobar permisos',
     rol: [2, 3, 4, 5, 6, 7],
-    id: 4,
+    id: 6,
     icon: 'checkmark-circle-outline',
   },
+  {
+    name: 'Comunicados',
+    label: 'Comunicados',
+    rol: [2, 3, 4, 5, 6, 7],
+    id: 7,
+    icon: 'newspaper-outline',
+  },
+
   /* {
     name: 'Almacen',
     label: 'Solicitudes de almacen',
@@ -71,25 +102,25 @@ const MENUs = [
     id: 5,
     icon: 'cart-outline',
   }, */
-];
+]
 
-const DrawerMenu = props => {
-  const { ci, user, rol, isDarkMode } = useSelector(state => state.auth);
+const DrawerMenu = (props) => {
+  const { ci, user, rol, isDarkMode } = useSelector((state) => state.auth)
   console.log(rol)
-  const [checked, setChecked] = useState(isDarkMode);
-  const [isLoading, setIsLoading] = useState(false);
+  const [checked, setChecked] = useState(isDarkMode)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const dispatch = useDispatch();
-  const setDarkMode = async isChecked => {
-    setIsLoading(true);
-    setChecked(isChecked);
-    const response = await axios.post('/users/theme', { theme: isChecked });
+  const dispatch = useDispatch()
+  const setDarkMode = async (isChecked) => {
+    setIsLoading(true)
+    setChecked(isChecked)
+    const response = await axios.post('/users/theme', { theme: isChecked })
     if (response.status == 200) {
-      dispatch(setTheme(isChecked));
-      setIsLoading(false);
+      dispatch(setTheme(isChecked))
+      setIsLoading(false)
     }
-    setIsLoading(false);
-  };
+    setIsLoading(false)
+  }
   const CustomDrawercontent = ({
     navigation,
     isDarkMode,
@@ -98,13 +129,14 @@ const DrawerMenu = props => {
     user,
     rol,
   }) => {
-    const dispatch = useDispatch();
-    const [activeIndex, setActiveIndex] = React.useState(0);
+    const dispatch = useDispatch()
+    const [activeIndex, setActiveIndex] = React.useState(0)
     return (
       <SafeAreaView
         style={{
           flex: 1,
-        }}>
+        }}
+      >
         <View style={{ flex: 1 }}>
           {/* Header */}
           <View
@@ -116,17 +148,20 @@ const DrawerMenu = props => {
               justifyContent: 'center',
               paddingLeft: 20,
               // alignItems: 'center',
-            }}>
+            }}
+          >
             <View
               style={{
                 flexDirection: 'row',
                 justifyContent: 'flex-start',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <View
                 style={{
                   marginRight: 10,
-                }}>
+                }}
+              >
                 <View
                   style={{
                     width: 46,
@@ -138,7 +173,8 @@ const DrawerMenu = props => {
                     padding: 3,
                     borderWidth: 1,
                     borderColor: PRIMARY_COLOR,
-                  }}>
+                  }}
+                >
                   <Image
                     size="small"
                     style={{ width: 40, height: 40, borderRadius: 20 }}
@@ -154,8 +190,9 @@ const DrawerMenu = props => {
                     fontSize: 16,
                     fontWeight: '600',
                     color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                  }}>
-                  {user?.nombres}
+                  }}
+                >
+                  {user.nombres}
                 </Text>
                 <Text
                   style={{
@@ -163,8 +200,9 @@ const DrawerMenu = props => {
                     color: isDarkMode
                       ? PRIMARY_TEXT_DARK_LIGHT
                       : PRIMARY_TEXT_LIGHT,
-                  }}>
-                  {user?.username}
+                  }}
+                >
+                  {user.username}
                 </Text>
               </View>
             </View>
@@ -173,7 +211,7 @@ const DrawerMenu = props => {
           <DrawerContentScrollView
             scrollEnabled={false}
             style={{ backgroundColor: 'transparent' }}
-          //contentContainerStyle={{backgroundColor: 'transparent'}}
+            //contentContainerStyle={{backgroundColor: 'transparent'}}
           >
             {MENUs?.map((menu, index) => {
               if (menu.rol.includes(user.rol_app))
@@ -192,8 +230,8 @@ const DrawerMenu = props => {
                       marginLeft: -8,
                     }}
                     onPress={() => {
-                      navigation.navigate(menu.name);
-                      setActiveIndex(index);
+                      navigation.navigate(menu.name)
+                      setActiveIndex(index)
                     }}
                     label={({ focused }) => {
                       return (
@@ -202,18 +240,20 @@ const DrawerMenu = props => {
                             flexDirection: 'row',
                             justifyContent: 'flex-start',
                             alignItems: 'center',
-                          }}>
+                          }}
+                        >
                           <View
                             style={{
                               width: 6,
-                              height: 24,
+                              height: 20,
                               marginRight: 15,
                               borderBottomRightRadius: 2,
                               borderTopRightRadius: 2,
                               backgroundColor: focused
                                 ? PRIMARY_COLOR
                                 : 'transparent',
-                            }}></View>
+                            }}
+                          ></View>
                           <Ionicons
                             name={menu.icon}
                             color={
@@ -234,13 +274,15 @@ const DrawerMenu = props => {
                                   ? PRIMARY_COLOR
                                   : PRIMARY_TEXT_DARK_LIGHT
                                 : PRIMARY_TEXT_LIGHT,
-                            }}>
+                            }}
+                          >
                             {menu.label}
                           </Text>
                         </View>
-                      );
-                    }}></DrawerItem>
-                );
+                      )
+                    }}
+                  ></DrawerItem>
+                )
             })}
           </DrawerContentScrollView>
 
@@ -250,7 +292,8 @@ const DrawerMenu = props => {
               paddingHorizontal: 20,
               borderTopColor: isDarkMode ? '#3f3f3f' : '#eee',
               borderTopWidth: 1,
-            }}>
+            }}
+          >
             <View
               style={{
                 width: '100%',
@@ -258,13 +301,15 @@ const DrawerMenu = props => {
                 justifyContent: 'space-between',
                 paddingRight: 20,
                 marginVertical: 10,
-              }}>
+              }}
+            >
               <Text
                 style={{
                   color: isDarkMode
                     ? PRIMARY_TEXT_DARK_LIGHT
                     : PRIMARY_TEXT_LIGHT,
-                }}>
+                }}
+              >
                 Modo oscuro
               </Text>
               <Switch
@@ -282,18 +327,21 @@ const DrawerMenu = props => {
                 justifyContent: 'flex-start',
                 paddingRight: 20,
                 marginVertical: 10,
-              }}>
+              }}
+            >
               <TouchableOpacity
                 onPress={async () => {
-                  await navigation.closeDrawer();
-                  dispatch(logout());
-                }}>
+                  await navigation.closeDrawer()
+                  dispatch(logout())
+                }}
+              >
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
                     alignItems: 'center',
-                  }}>
+                  }}
+                >
                   <AntDesign
                     name="logout"
                     size={24}
@@ -308,7 +356,8 @@ const DrawerMenu = props => {
                       color: isDarkMode
                         ? PRIMARY_TEXT_DARK_LIGHT
                         : PRIMARY_TEXT_LIGHT,
-                    }}>
+                    }}
+                  >
                     Salir
                   </Text>
                 </View>
@@ -321,20 +370,21 @@ const DrawerMenu = props => {
                   fontSize: 11,
                   color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#999',
                 }}>
-                V 1.0.1
+                V 1.0.2
               </Text>
             </View> */}
           </View>
         </View>
       </SafeAreaView>
-    );
-  };
+    )
+  }
   return (
     <View
       style={{
         flex: 1,
         backgroundColor: isDarkMode ? BACKGROUND_PRIMARY_DARK : '#E0E0E0',
-      }}>
+      }}
+    >
       <Drawer.Navigator
         hideStatusBar={true}
         screenOptions={{
@@ -344,7 +394,7 @@ const DrawerMenu = props => {
             flex: 1,
             backgroundColor: isDarkMode ? BACKGROUND_PRIMARY_DARK : '#FFFFFF',
             //backgroundColor: PRIMARY_COLOR,
-            width: '70%',
+            width: '75%',
           },
           //drawerType: 'slide',
           //overlayColor: 'transparent',
@@ -357,7 +407,7 @@ const DrawerMenu = props => {
         }}
         initialRouteName="HomeTabs"
         //useLegacyImplementation
-        drawerContent={props => {
+        drawerContent={(props) => {
           return (
             <CustomDrawercontent
               navigation={props.navigation}
@@ -367,25 +417,35 @@ const DrawerMenu = props => {
               rol={rol}
               checked={checked}
             />
-          );
-        }}>
+          )
+        }}
+      >
         <Drawer.Screen name="HomeTabs">
-          {props => <HomeStackScreen  {...props} />}
+          {(props) => <HomeStackScreen {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="Sigec">
-          {props => <SigecStackScreen {...props} />}
+          {(props) => <SigecStackScreen {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="CMI">
-          {props => <CmiStackScreen {...props} />}
+          {(props) => <CmiStackScreen {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="Almacen">
-          {props => <AlmacenStackScreen {...props} />}
+          {(props) => <AlmacenStackScreen {...props} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Parque">
+          {(props) => <ParqueStackScreen {...props} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Oruro">
+          {(props) => <OruroStackScreen {...props} />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Comunicados">
+          {(props) => <ComunicadosStackScreen {...props} />}
         </Drawer.Screen>
         <Drawer.Screen name="Approve">
-          {props => <LicenseStackScreen {...props} />}
+          {(props) => <LicenseStackScreen {...props} />}
         </Drawer.Screen>
       </Drawer.Navigator>
     </View>
-  );
-};
-export default DrawerMenu;
+  )
+}
+export default DrawerMenu

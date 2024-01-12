@@ -14,10 +14,10 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
   BACKGROUND_PRIMARY_DARK,
-  PALETTE,
   PRIMARY_TEXT_DARK_LIGHT,
   PRIMARY_TEXT_LIGHT,
   PRIMARY_TEXT_DARK,
+  BACKGROUND_PRIMARY_LIGHT,
 } from '../utils/constants'
 // register extensions
 echarts.use([
@@ -30,8 +30,17 @@ echarts.use([
   PieChart,
 ])
 
-const E_HEIGHT = Dimensions.get('screen').width - 100
+const E_HEIGHT = 190
 const E_WIDTH = Dimensions.get('screen').width - 6
+const PALETTE = [
+  '#68B7DB',
+  '#6692DC',
+  '#6770DD',
+  '#8067DC',
+  '#A367DC',
+  '#C667DC',
+  '#DC67CE',
+]
 
 // initial
 function SvgComponent({ option }) {
@@ -55,7 +64,8 @@ function SvgComponent({ option }) {
 }
 
 // Component usage
-export default function App({ data, isDarkMode }) {
+export default function App({ data, isDarkMode, palette }) {
+  console.log('palette', palette)
   const option = {
     title: {
       show: false,
@@ -63,7 +73,9 @@ export default function App({ data, isDarkMode }) {
       color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
       padding: [0, 2, 5, 15],
     },
-    backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
+    backgroundColor: isDarkMode
+      ? BACKGROUND_PRIMARY_DARK
+      : BACKGROUND_PRIMARY_LIGHT,
     legend: {
       top: '8%',
       left: '2%',
@@ -73,10 +85,11 @@ export default function App({ data, isDarkMode }) {
       textStyle: {
         color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#333',
         borderCap: 'round',
-        fontSize: 10,
+        fontSize: 14,
       },
     },
     tooltip: {
+      show: false,
       backgroundColor: isDarkMode ? BACKGROUND_PRIMARY_DARK : BACKGROUND_LIGHT,
       textStyle: {
         fontSize: 12,
@@ -85,14 +98,14 @@ export default function App({ data, isDarkMode }) {
       //formatter: '{c}',
       // trigger: "item",
     },
-    color: PALETTE,
+    color: palette != undefined ? palette : PALETTE,
     series: [
       {
         name: '',
         type: 'pie',
-        radius: ['50%', '80%'],
+        radius: ['55%', '90%'],
         avoidLabelOverlap: false,
-        left: '35%',
+        left: '29%',
         label: {
           show: false,
           position: 'center',
@@ -103,7 +116,7 @@ export default function App({ data, isDarkMode }) {
         emphasis: {
           label: {
             show: true,
-            fontSize: 30,
+            fontSize: 24,
             fontWeight: 'bold',
           },
         },

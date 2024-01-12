@@ -5,19 +5,20 @@ import {
 } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { jwtDecode } from 'jwt-decode'
-const TOKEN_KEY = 'token';
+const TOKEN_KEY = 'token'
 export const authLogin = createAsyncThunk(
   'auth/authLogin',
   async (params, { dispatch, getState }) => {
-    const { email, password } = params
+    const { email, password, expo } = params
     const { oneSignalId } = getState().auth
     const response = await axios.post('/auth/login', {
       email,
       password,
       oneSignalId,
+      expo,
     })
 
     //console.log(oneSignalId)
@@ -26,7 +27,7 @@ export const authLogin = createAsyncThunk(
     if (response.status === 200) {
       //usuario autenticado
       if (response.data.success) {
-        await AsyncStorage.setItem('token', response.data.token);
+        await AsyncStorage.setItem('token', response.data.token)
 
         //console.log(value)
         //await AsyncStorage.setItem ('user', JSON.stringify (response.data.user));

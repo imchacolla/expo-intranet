@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import {
   View,
   TouchableOpacity,
@@ -11,17 +11,21 @@ import {
   Dimensions,
   Animated,
   TextInput,
-} from 'react-native';
-import { StatusBar } from 'react-native';
-import { useForm, Controller } from 'react-hook-form';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+} from 'react-native'
+import { StatusBar } from 'react-native'
+import { useForm, Controller } from 'react-hook-form'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 
-import FormInput from '../components/FormInput';
-import FormButton, { FormButtonRecovery } from '../components/FormButton';
-import LogoMt from '../components/Logo';
-import { authLogin, setUser, authRecovery } from '../store/auth';
+import FormInput from '../components/FormInput'
+import FormButton, { FormButtonRecovery } from '../components/FormButton'
+import LogoMt from '../components/Logo'
+import { authLogin, setUser, authRecovery } from '../store/auth'
+import { usePushNotification } from '../../usePushNotification'
+
+import * as Device from 'expo-device'
+
 //import styles from "../utils/styleLogin";
-import axios from 'axios';
+import axios from 'axios'
 //CONSTANTS
 import {
   PRIMARY_COLOR,
@@ -33,16 +37,18 @@ import {
   BACKGROUND_PRIMARY_DARK,
   BACKGROUND_LIGHT,
   SECONDARY_COLOR,
-} from '../utils/constants';
-import Svg, { Image, Ellipse, ClipPath } from 'react-native-svg';
+} from '../utils/constants'
+import Svg, { Image, Ellipse, ClipPath } from 'react-native-svg'
 
-const { width, height } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen')
 
 const Login = ({ navigation }) => {
-  const dispatch = useDispatch();
+  const { expoPushToken } = usePushNotification()
+
+  const dispatch = useDispatch()
   const { token, loading, error, isDarkMode, oneSignalId } = useSelector(
-    state => state.auth,
-  );
+    (state) => state.auth,
+  )
   //USE QUERY
   const {
     control,
@@ -54,40 +60,50 @@ const Login = ({ navigation }) => {
       email: '',
       password: '',
     },
-  });
+  })
 
-  const [secureTextEntry, setSecureTextEntry] = React.useState(true);
-  const LoadingIndicator = props => (
+  const [secureTextEntry, setSecureTextEntry] = React.useState(true)
+  const LoadingIndicator = (props) => (
     <View style={[props.style, styles.indicator]}>
       <Spinner size="small" />
     </View>
-  );
+  )
 
   const toggleSecureEntry = () => {
-    setSecureTextEntry(!secureTextEntry);
-  };
+    setSecureTextEntry(!secureTextEntry)
+  }
 
   //login form
-  const handleLoginForm = async data => {
-    const { email, password } = data;
-
-    dispatch(authLogin({ email: email.toLowerCase().trim(), password }))
+  const handleLoginForm = async (data) => {
+    const { email, password } = data
+    const expo = {
+      token: expoPushToken?.data,
+      device: Device.brand,
+      name: Device.deviceName,
+      model: Device.modelName,
+      manufactured: Device.manufacturer,
+      build_id: Device.osInternalBuildId,
+      os: Device.osName,
+      version: Device.osVersion,
+    }
+    dispatch(authLogin({ email: email.toLowerCase().trim(), password, expo }))
       .unwrap()
-      .then(originalPromiseResult => {
+      .then((originalPromiseResult) => {
         if (originalPromiseResult.success) {
+          console.log('usuario authenticado con exito', originalPromiseResult)
         }
       })
-      .catch(errorAxios => {
-        let error = 'Error desconocido, favor contactar al administrador';
+      .catch((errorAxios) => {
+        let error = 'Error desconocido, favor contactar al administrador'
         if (errorAxios.message == 'Request failed with status code 401') {
-          error = 'El usuario proporcionado no existe';
+          error = 'El usuario proporcionado no existe'
         }
         if (errorAxios.message == 'Request failed with status code 402') {
-          error = 'Contraseña incorrecta';
+          error = 'Contraseña incorrecta'
         }
-        Alert.alert('Error', error);
-      });
-  };
+        Alert.alert('Error', error)
+      })
+  }
 
   return (
     <View
@@ -98,7 +114,8 @@ const Login = ({ navigation }) => {
             ? BACKGROUND_PRIMARY_DARK
             : BACKGROUND_PRIMARY_LIGHT,
         },
-      ]}>
+      ]}
+    >
       <View
         style={{
           position: 'absolute',
@@ -108,7 +125,8 @@ const Login = ({ navigation }) => {
           top: Dimensions.get('screen').height - 200,
           backgroundColor: PRIMARY_COLOR,
           borderRadius: 90,
-        }}></View>
+        }}
+      ></View>
       <View
         style={{
           position: 'absolute',
@@ -118,7 +136,8 @@ const Login = ({ navigation }) => {
           top: Dimensions.get('screen').height - 250,
           backgroundColor: SECONDARY_COLOR,
           borderRadius: 100,
-        }}></View>
+        }}
+      ></View>
 
       {/*  <View style={[StyleSheet.absoluteFill]}>
         <Svg height={height + 100} width={width}>
@@ -136,14 +155,16 @@ const Login = ({ navigation }) => {
           style={{
             alignItems: 'center',
             justifyContent: 'center',
-          }}>
+          }}
+        >
           <LogoMt color={isDarkMode ? '#7C7C7C' : PRIMARY_COLOR} />
           <Text
             style={{
               color: isDarkMode ? '#7C7C7C' : PRIMARY_COLOR,
               fontSize: 22,
               marginTop: 0,
-            }}>
+            }}
+          >
             Intranet
           </Text>
         </View>
@@ -157,7 +178,8 @@ const Login = ({ navigation }) => {
                   borderRadius: 10,
                   // backgroundColor: "#F2F2F2",
                   opacity: 0.9,
-                }}>
+                }}
+              >
                 <View
                   style={[
                     styles.formGroup,
@@ -166,7 +188,8 @@ const Login = ({ navigation }) => {
                         ? BACKGROUND_DARK
                         : BACKGROUND_LIGHT,
                     },
-                  ]}>
+                  ]}
+                >
                   <Ionicons
                     name="ios-person-outline"
                     size={22}
@@ -213,7 +236,8 @@ const Login = ({ navigation }) => {
                         ? BACKGROUND_DARK
                         : BACKGROUND_LIGHT,
                     },
-                  ]}>
+                  ]}
+                >
                   <Ionicons
                     name="lock-closed-outline"
                     size={22}
@@ -276,7 +300,9 @@ const Login = ({ navigation }) => {
               </View>
             </View>
           </View>
-          <Text style={{ marginTop: 50, color: '#BFC6CB', alignSelf: 'center' }}>
+          <Text
+            style={{ marginTop: 50, color: '#BFC6CB', alignSelf: 'center' }}
+          >
             Copyright (c) DTSI
           </Text>
         </View>
@@ -286,17 +312,17 @@ const Login = ({ navigation }) => {
         backgroundColor={isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT}
       />
     </View>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
 const styles = StyleSheet.create({
   container: {
     // marginTop: 100,
     marginHorizontal: 10,
     borderRadius: 20,
     paddingVertical: 10,
-    marginTop: 40
+    marginTop: 40,
   },
   formInputContainer: {
     marginTop: 20,
@@ -322,4 +348,4 @@ const styles = StyleSheet.create({
     color: '#d72e2e',
     marginLeft: 40,
   },
-});
+})

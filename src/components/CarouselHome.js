@@ -20,6 +20,8 @@ import {
   PRIMARY_COLOR,
   BACKGROUND_PRIMARY_DARK,
   BACKGROUND_PRIMARY_LIGHT,
+  BACKGROUND_DARK,
+  BACKGROUND_LIGHT,
 } from '../utils/constants'
 const url = 'https://adminweb.miteleferico.bo/api/anuncios-pimt'
 
@@ -89,7 +91,8 @@ const CarouselHome = ({ navigation, pause, loading }) => {
         <Carousel
           loop
           width={width}
-          height={width / 2 + 10}
+          //height={width / 2 - 20}
+          height={107}
           autoPlay={pause}
           mode="parallax"
           modeConfig={{
@@ -121,14 +124,14 @@ const CarouselHome = ({ navigation, pause, loading }) => {
                       justifyContent: 'center',
                       textAlign: 'center',
                       flexDirection: 'column',
-                      backgroundColor: PRIMARY_COLOR,
+                      backgroundColor: '#2F3240',
                       borderTopStartRadius: 10,
-                      padding: 10,
+                      padding: 5,
                     }}
                   >
                     <MaterialCommunityIcons
                       name="calendar"
-                      size={48}
+                      size={36}
                       color={'#eee'}
                       style={{ textAlign: 'center' }}
                     />
@@ -146,40 +149,28 @@ const CarouselHome = ({ navigation, pause, loading }) => {
                       )}
                     </Text>
                   </View>
-                  <View
-                    style={{
-                      borderRadius: 10,
-                      width: 100,
-                      height: 90,
-                      marginTop: 20,
-                    }}
-                  >
-                    <ImageBackground
-                      source={getFondo(data[index].attributes.tipo)}
-                      resizeMode="cover"
-                      style={styles.image}
-                    />
-                  </View>
                   <Pressable
                     onPress={() => goPage(data[index].attributes?.slug)}
                   >
                     <View
                       style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        //borderColor: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_COLOR,
-                        //borderWidth: 1,
-                        padding: 2,
-                        //borderRadius: 10,
-                        marginTop: 8,
-                        alignItems: 'center',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        flexDirection: 'column',
+                        backgroundColor: '#2F3240',
+                        borderBottomStartRadius: 10,
+                        //padding: 5,
+                        height: 40,
                       }}
                     >
                       <Text
                         style={{
-                          //color: 'white',
-                          borderBottomColor: 'white',
-                          borderBottomWidth: 1,
+                          color: '#efefef',
+                          textAlign: 'center',
+                          fontWeight: '400',
+                          fontSize: 16,
+                          marginVertical: 5,
+                          textDecorationLine: 'underline',
                         }}
                       >
                         Leer mas
@@ -196,17 +187,15 @@ const CarouselHome = ({ navigation, pause, loading }) => {
                   ]}
                 >
                   <View>
-                    <Text style={styles.textTitle}>
+                    <Text
+                      style={[
+                        styles.textTitle,
+                        {
+                          color: isDarkMode ? '#f2f2f2' : '#333',
+                        },
+                      ]}
+                    >
                       {data[index].attributes.titulo}
-                    </Text>
-                    <Text style={styles.textDescription}>
-                      {data[index].attributes?.descripcion
-                        ?.toString()
-                        .substring(0, 100)}
-                      {data[index].attributes?.descripcion?.toString().length >
-                      100
-                        ? '...'
-                        : ''}
                     </Text>
                   </View>
                 </View>
@@ -230,15 +219,15 @@ const styles = StyleSheet.create({
     //backgroundColor: PRIMARY_COLOR,
     opacity: 0.8,
     //marginVertical: 10,
-    padding: 10,
+    padding: 5,
     borderBottomStartRadius: 10,
     borderBottomEndRadius: 10,
   },
   textTitle: {
     //color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 16,
     //lineHeight: 84,
-    fontWeight: 'bold',
+    fontWeight: '600',
     textAlign: 'left',
     marginBottom: 5,
     textTransform: 'uppercase',

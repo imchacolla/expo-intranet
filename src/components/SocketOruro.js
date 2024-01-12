@@ -6,9 +6,12 @@ import { View, StyleSheet, Text } from 'react-native'
 import { useSelector } from 'react-redux'
 
 import round from 'lodash/round'
-import { PRIMARY_TEXT_DARK, PRIMARY_TEXT_LIGHT } from '../utils/constants'
-
-const SocketHome = ({ navigation }) => {
+import {
+  BACKGROUND_ORURO,
+  PRIMARY_TEXT_DARK,
+  PRIMARY_TEXT_LIGHT,
+} from '../utils/constants'
+const SocketOruro = ({ navigation }) => {
   const socket = useContext(SocketContext)
   const { ci, user, isDarkMode } = useSelector((state) => state.auth)
   const [pasajerosTodo, setPasajerosTodo] = useState('0')
@@ -27,13 +30,13 @@ const SocketHome = ({ navigation }) => {
   }, [])
 
   useEffect(() => {
-    socket.on('pasajeros-todo', socketPasajeros)
-    socket.on('pasajeros-hoy', socketPasajerosHoy)
-    socket.on('ingresos-hoy', socketIngresosHoy)
+    socket.on('pasajeros-oruro-todo', socketPasajeros)
+    socket.on('pasajeros-oruro-hoy', socketPasajerosHoy)
+    socket.on('ingresos-oruro-hoy', socketIngresosHoy)
     return () => {
-      socket.off('pasajeros-todo')
-      socket.off('pasajeros-hoy')
-      socket.off('ingresos-hoy')
+      socket.off('pasajeros-oruro-todo')
+      socket.off('pasajeros-oruro-hoy')
+      socket.off('ingresos-oruro-hoy')
     }
   }, [socket])
 
@@ -41,7 +44,7 @@ const SocketHome = ({ navigation }) => {
     <>
       <View
         style={{
-          marginTop: -30,
+          marginTop: -15,
           flexDirection: 'column',
           justifyContent: 'center',
           alignContent: 'center',
@@ -53,12 +56,15 @@ const SocketHome = ({ navigation }) => {
             color: isDarkMode ? '#999' : PRIMARY_TEXT_LIGHT,
           }}
         >
-          Pasajeros transportados
+          Visitantes
         </Text>
         <Text
           style={{
             fontSize: 36,
-            color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+            textAlign: 'center',
+            fontWeight: '600',
+            //color: isDarkMode ? PRIMARY_TEXT_DARK : BACKGROUND_ORURO,
+            color: isDarkMode ? '#AC7979' : BACKGROUND_ORURO,
           }}
         >
           {new Intl.NumberFormat('es-ES').format(round(pasajerosTodo, 0))}
@@ -76,14 +82,16 @@ const SocketHome = ({ navigation }) => {
           <Text
             style={{
               fontSize: 12,
+              textAlign: 'center',
               color: isDarkMode ? '#999' : PRIMARY_TEXT_LIGHT,
             }}
           >
-            Pasajeros hoy
+            Visitantes hoy
           </Text>
           <Text
             style={{
               fontSize: 18,
+              textAlign: 'center',
               color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
             }}
           >
@@ -103,6 +111,7 @@ const SocketHome = ({ navigation }) => {
           <Text
             style={{
               fontSize: 18,
+              textAlign: 'center',
               color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
             }}
           >
@@ -114,6 +123,6 @@ const SocketHome = ({ navigation }) => {
   )
 }
 
-export default SocketHome
+export default SocketOruro
 
 const styles = StyleSheet.create({})

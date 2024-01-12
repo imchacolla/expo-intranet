@@ -1,7 +1,14 @@
-import React, {memo, useEffect, useCallback} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {authLogin, logout, setModeDark} from '../store/auth';
-import {StyleSheet, View, Pressable, Image, Text} from 'react-native';
+import React, { memo, useEffect, useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { authLogin, logout, setModeDark } from '../store/auth'
+import {
+  StyleSheet,
+  View,
+  Pressable,
+  Image,
+  Text,
+  Platform,
+} from 'react-native'
 
 //CONSTANTS
 import {
@@ -14,29 +21,13 @@ import {
   PRIMARY_BACKGROUND_DARK,
   PRIMARY_TEXT_LIGHT,
   PRIMARY_TEXT_DARK_LIGHT,
-} from '../utils/constants';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import IonIcons from 'react-native-vector-icons/Ionicons';
+} from '../utils/constants'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import IonIcons from 'react-native-vector-icons/Ionicons'
 
-const Title = ({title, subtitle = '', navigation}) => {
-  // const {title} = props;
-  const dispatch = useDispatch();
-  //get marcaciones
-  const userLogout = () => {
-    dispatch(logout());
-  };
-
-  const ci = useSelector(state => state.auth.ci);
-  const isDarkMode = useSelector(state => state.auth.isDarkMode);
-
-  const goSettings = () => {
-    navigation.navigate('Setting');
-  };
-
-  const changeSchema = useCallback(() => {
-    dispatch(setModeDark());
-  }, [dispatch]);
-  //console.log ('ci', ci);
+const Title = ({ title, subtitle = '', navigation }) => {
+  const ci = useSelector((state) => state.auth.ci)
+  const isDarkMode = useSelector((state) => state.auth.isDarkMode)
   return (
     <View style={styles.title}>
       <View
@@ -44,11 +35,14 @@ const Title = ({title, subtitle = '', navigation}) => {
           marginLeft: 10,
           width: 35,
           height: 35,
-        }}>
+          //marginTop: Platform.OS === 'android' ? 0 : 10,
+        }}
+      >
         <TouchableOpacity
           onPress={() => {
-            navigation.openDrawer();
-          }}>
+            navigation.openDrawer()
+          }}
+        >
           <IonIcons
             name="menu-outline"
             size={30}
@@ -56,28 +50,29 @@ const Title = ({title, subtitle = '', navigation}) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={{marginLeft: 5}}>
+      <View style={{ marginLeft: 5 }}>
         <Text
           style={{
             fontSize: 20,
             fontWeight: 'bold',
             color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT,
-          }}>
+          }}
+        >
           {title}
         </Text>
       </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <View style={styles.avatarBorder}>
           <Image
             size="small"
-            style={{width: 32, height: 32, borderRadius: 16}}
-            source={{uri: 'https://rrhh.miteleferico.bo/api/foto?c=' + ci}}
+            style={{ width: 32, height: 32, borderRadius: 16 }}
+            source={{ uri: 'https://rrhh.miteleferico.bo/api/foto?c=' + ci }}
           />
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   icon: {
@@ -104,5 +99,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: PRIMARY_COLOR,
   },
-});
-export default memo(Title);
+})
+export default memo(Title)

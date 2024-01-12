@@ -12,6 +12,7 @@ import {
   Alert,
   RefreshControl,
   ScrollView,
+  StatusBar,
 } from 'react-native'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -37,11 +38,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CarouselHome from '../components/CarouselHome'
 import ListVacations from '../components/ListVacations'
-
+import EchartPersonal from '../components/EchartPersonal'
+import EchartPie from '../components/EchartPieEdades'
 const { width, height } = Dimensions.get('screen')
 const SPACING = 5
 //const ITEM_SIZE = width * 0.38;
-const ITEM_SIZE = 125
+const ITEM_SIZE = 120
 const SPACER_ITEM_SIZE = (width - ITEM_SIZE) / 2
 
 const HomeScreen = ({ navigation }) => {
@@ -54,7 +56,10 @@ const HomeScreen = ({ navigation }) => {
   const [totalVacations, setTotalVacations] = useState(0)
   const [nextVacation, setNextVacation] = useState(null)
   const [vacations, setVacations] = useState([])
+  const [personal, setPersonal] = useState(null)
+  const [edades, setEdades] = useState(null)
   const [listaVacaciones, setListaVacaciones] = useState([])
+  const [indexTab, setIndexTab] = useState(0)
   //show modal
   const [refreshing, setRefreshing] = useState(false)
 
@@ -67,6 +72,8 @@ const HomeScreen = ({ navigation }) => {
     getBirtdays()
     getNextVacation()
     getData()
+    getChart()
+    getEdades()
     wait(500).then(() => setRefreshing(false))
   }, [])
 
@@ -79,6 +86,13 @@ const HomeScreen = ({ navigation }) => {
     setIsLoading(false)
     //console.log (response.data.data);
   }
+
+  //optonet record pasajeros
+  const getRecords = async () => {
+    const response = await axios.get('/pasajeros/records')
+    setPersonal(response.data.data)
+  }
+
   //proxmimos cumpleañeros
 
   const getVacations = async () => {
@@ -94,10 +108,16 @@ const HomeScreen = ({ navigation }) => {
   }
 
   const getChart = async () => {
-    const response = await axios.get('/rrhh/person-bar')
-    setDataChart(response.data.data)
-    //console.log(response.data.data);
+    const response = await axios.get('/rrhh/person-chart')
+    //console.log(response.data.data)
+    setPersonal(response.data.data)
   }
+  const getEdades = async () => {
+    const response = await axios.get('/rrhh/edades-chart')
+    console.log(response.data.data)
+    setEdades(response.data.data)
+  }
+
   const getNextVacation = async () => {
     const response = await axios.get('/rrhh/next-vacation')
     //console.log(response.data.data);
@@ -126,7 +146,7 @@ const HomeScreen = ({ navigation }) => {
         }
       })
 
-      setPasajeros(datos)
+      //setPasajeros(datos)
     } catch (error) {}
   }
   const renderHtml = () => {
@@ -150,67 +170,6 @@ const HomeScreen = ({ navigation }) => {
     )
   }
 
-  const getPasajerosMes = async (gestion) => {
-    try {
-      setPasajerosMes([])
-      const response = await axios.get('/pasajeros/mes/' + gestion)
-      const datos = response.data.data.map((p) => {
-        return {
-          value: p.cantidad / 1000000,
-          label: p.mes_letra,
-          topLabelComponent: () => (
-            <Text
-              style={{
-                color: isDarkMode ? '#cccccc' : '#333',
-                fontSize: 10,
-                marginBottom: 6,
-              }}
-            >
-              {(p.cantidad / 1000000).toFixed(1)}
-            </Text>
-          ),
-
-          labelComponent: () => customLabel(p.mes_letra),
-          dataPointLabelComponent: () => {
-            return (
-              <View
-                style={{
-                  backgroundColor: isDarkMode
-                    ? BACKGROUND_DARK
-                    : BACKGROUND_LIGHT,
-                  paddingHorizontal: 4,
-                  paddingVertical: 1,
-                  borderRadius: 2,
-                  marginTop: -15,
-                }}
-              >
-                <Text
-                  style={{
-                    color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                    fontSize: 12,
-                    fontWeight: '500',
-                  }}
-                >
-                  {(p.cantidad / 1000000).toFixed(1)}
-                </Text>
-              </View>
-            )
-          },
-        }
-      })
-
-      setPasajerosMes(datos)
-      //console.log(datos);
-    } catch (error) {}
-  }
-
-  const getChartMeses = (barchar) => {
-    getPasajerosMes(barchar.label)
-    setModalVisibleGestion(true)
-    setGestion(barchar.label)
-    console.log('barchar', barchar.label)
-  }
-
   const bottomSheetRef = useRef(null)
 
   // variables
@@ -223,9 +182,9 @@ const HomeScreen = ({ navigation }) => {
       const response = await axios.get(`/rrhh/vacations`)
       const data = response.data.data
       setListaVacaciones(data)
-      console.log('data', data)
+      // console.log('data', data)
 
-      const total = _.sumBy(data, 'total_dias')
+      //const total = _.sumBy(data, 'total_dias')
     } catch (error) {
       console.log(error)
     }
@@ -238,6 +197,8 @@ const HomeScreen = ({ navigation }) => {
     getVacationsLista()
 
     getNextVacation()
+    getChart()
+    getEdades()
   }, [])
 
   //Modal
@@ -341,30 +302,28 @@ const HomeScreen = ({ navigation }) => {
                   marginTop: 8,
                 }}
               >
-                <TouchableOpacity onPress={() => renderHtml()}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text
-                      style={[
-                        styles.vacations,
-                        {
-                          color: isDarkMode ? '#f2f2f2' : '#333',
-                        },
-                      ]}
-                    >
-                      {totalVacations}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.descriptionVacation,
-                        {
-                          color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#666',
-                        },
-                      ]}
-                    >
-                      Días de vacación disponible
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text
+                    style={[
+                      styles.vacations,
+                      {
+                        color: isDarkMode ? '#f2f2f2' : '#333',
+                      },
+                    ]}
+                  >
+                    {totalVacations}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.descriptionVacation,
+                      {
+                        color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#666',
+                      },
+                    ]}
+                  >
+                    Días de vacación disponible
+                  </Text>
+                </View>
                 {nextVacation?.map((v, i) => (
                   <TouchableOpacity
                     onPress={() => handlePresentModalPress()}
@@ -402,7 +361,7 @@ const HomeScreen = ({ navigation }) => {
               style={{
                 justifyContent: 'flex-start',
                 flexDirection: 'row',
-                marginTop: 10,
+
                 alignContent: 'center',
               }}
             >
@@ -410,14 +369,14 @@ const HomeScreen = ({ navigation }) => {
                 style={[
                   styles.subtitle,
                   {
-                    color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+                    color: isDarkMode ? '#b2b2b2' : PRIMARY_TEXT_LIGHT,
                   },
                 ]}
               >
                 Próximos cumpleaños
               </Text>
             </View>
-            {birthdays ? (
+            {birthdays && (
               <Animated.FlatList
                 data={birthdays}
                 horizontal
@@ -471,13 +430,13 @@ const HomeScreen = ({ navigation }) => {
                             marginHorizontal: SPACING,
                             //padding: SPACING * 2,
                             paddingVertical: SPACING * 2,
-                            paddingHorizontal: 5,
+                            paddingHorizontal: 2,
                             alignItems: 'center',
                             backgroundColor: isDarkMode
                               ? BACKGROUND_PRIMARY_DARK
                               : BACKGROUND_PRIMARY_LIGHT,
                             borderRadius: 10,
-                            minHeight: 160,
+                            minHeight: 120,
                           }}
                         >
                           <Image
@@ -488,8 +447,8 @@ const HomeScreen = ({ navigation }) => {
                               //+ '&w=500',
                             }}
                             style={{
-                              width: 75,
-                              height: 75,
+                              width: 70,
+                              height: 70,
                               borderTopRightRadius: 35,
                               borderBottomRightRadius: 35,
                               borderBottomLeftRadius: 35,
@@ -500,7 +459,7 @@ const HomeScreen = ({ navigation }) => {
                               style={{
                                 fontSize: 12,
                                 fontWeight: '400',
-                                marginLeft: 5,
+                                marginLeft: 3,
                                 color: isDarkMode
                                   ? PRIMARY_TEXT_DARK
                                   : PRIMARY_TEXT_LIGHT,
@@ -527,27 +486,128 @@ const HomeScreen = ({ navigation }) => {
                   )
                 }}
               />
-            ) : null}
+            )}
           </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingHorizontal: 5,
+              marginTop: 8,
+            }}
+          >
+            <View>
+              <Text
+                style={{
+                  color: isDarkMode ? '#b2b2b2' : PRIMARY_TEXT_LIGHT,
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                }}
+              >
+                Estadísticas
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity
+                onPress={() => setIndexTab(0)}
+                style={{
+                  backgroundColor:
+                    indexTab === 0 ? PRIMARY_COLOR : 'transparent',
+                  paddingHorizontal: 5,
+                  paddingVertical: 1,
+                  borderRadius: 15,
+                  marginRight: 5,
+                  width: 65,
+                  justifyContent: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color:
+                      indexTab === 0
+                        ? '#f2f2f2'
+                        : isDarkMode
+                        ? '#f2f2f2'
+                        : '#333',
+                  }}
+                >
+                  Genero
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setIndexTab(1)}
+                style={{
+                  backgroundColor:
+                    indexTab === 1 ? PRIMARY_COLOR : 'transparent',
 
+                  paddingHorizontal: 5,
+                  paddingVertical: 1,
+                  borderRadius: 15,
+                  width: 65,
+                  justifyContent: 'center',
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    color:
+                      indexTab === 1
+                        ? '#f2f2f2'
+                        : isDarkMode
+                        ? '#f2f2f2'
+                        : '#333',
+                  }}
+                >
+                  Edad
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View
+            style={{
+              width: Dimensions.get('screen').width - 10,
+              marginHorizontal: 5,
+              marginTop: 10,
+              borderRadius: 10,
+              backgroundColor: isDarkMode
+                ? BACKGROUND_PRIMARY_DARK
+                : BACKGROUND_PRIMARY_LIGHT,
+              height: 190,
+            }}
+          >
+            {personal && indexTab === 0 && (
+              <EchartPersonal
+                data={personal}
+                isDarkMode={isDarkMode}
+                color={PRIMARY_COLOR}
+                mes={3}
+                colorChart={PRIMARY_COLOR}
+                colorLabel={PRIMARY_COLOR}
+              />
+            )}
+            {edades && indexTab === 1 && (
+              <EchartPie data={edades} isDarkMode={isDarkMode} />
+            )}
+          </View>
           <View
             style={{
               justifyContent: 'space-between',
               flexDirection: 'row',
-              marginTop: 10,
+              marginTop: 5,
               alignContent: 'center',
-              marginRight: 10,
+              marginRight: 5,
             }}
           >
             <Text
               style={[
                 styles.subtitle,
                 {
-                  color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+                  color: isDarkMode ? '#b2b2b2' : PRIMARY_TEXT_LIGHT,
                 },
               ]}
             >
-              Anuncios
+              Comunicados
             </Text>
             <TouchableOpacity
               onPress={() => {
@@ -568,7 +628,6 @@ const HomeScreen = ({ navigation }) => {
               loading={isLoading}
             />
           </View>
-          <View style={{ height: 50 }}></View>
         </ScrollView>
         <BottomSheetModal
           ref={bottomSheetRef}
@@ -650,7 +709,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+    //marginBottom: 5,
     marginLeft: 5,
   },
   description: {
@@ -659,8 +718,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     //alignItems: 'center',
     justifyContent: 'space-between',
-    height: 70,
-    paddingBottom: 5,
+    height: 60,
+    paddingBottom: 1,
   },
   itemNombre: {
     // color: TERTIARY_COLOR,
@@ -692,7 +751,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    marginTop: 20,
   },
   modalView: {
     // borderColor: '#666',

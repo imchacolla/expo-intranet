@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useCallback, useState, useRef} from 'react';
+import React, { useEffect, useMemo, useCallback, useState, useRef } from 'react'
 import {
   Alert,
   StyleSheet,
@@ -14,16 +14,19 @@ import {
   Text,
   TouchableOpacity,
   Dimensions,
-} from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import AntDesing from 'react-native-vector-icons/AntDesign';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import debounce from 'lodash/debounce';
-import _ from 'lodash';
-import axios from 'axios';
-import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
+} from 'react-native'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import AntDesing from 'react-native-vector-icons/AntDesign'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import debounce from 'lodash/debounce'
+import _ from 'lodash'
+import axios from 'axios'
+import {
+  BottomSheetModal,
+  BottomSheetModalProvider,
+} from '@gorhom/bottom-sheet'
 
-import Title from '../components/Title';
+import Title from '../components/Title'
 //import {SharedElement} from 'react-navigation-shared-element';
 //CONSTANTS COLORS
 import {
@@ -38,36 +41,35 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
   PRIMARY_TEXT_DARK_LIGHT,
-} from '../utils/constants';
+} from '../utils/constants'
 //import REACT REDUX
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'
 //import filter persson
-import FilterPersons from '../components/FilterPersons';
-import {FlashList} from '@shopify/flash-list';
+import FilterPersons from '../components/FilterPersons'
+import { FlashList } from '@shopify/flash-list'
 
-const Users = ({navigation}) => {
-  const refTextInputSearch = React.createRef();
-  const [refresh, setRefresh] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const [data, setData] = React.useState([]);
-  const [filterData, setFilterData] = React.useState([]);
-  const [page, setPage] = React.useState(1);
-  const [perPage, setPerPage] = React.useState(1000);
-  const [q, setQ] = React.useState('');
-  const [total, setTotal] = React.useState(0);
-  const [checked, setChecked] = useState(true);
-  const [indexTab, setIndexTab] = React.useState(0);
-  const [gerencia, setGerencia] = React.useState('TODO');
+const Users = ({ navigation }) => {
+  const refTextInputSearch = React.createRef()
+  const [refresh, setRefresh] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
+  const [data, setData] = React.useState([])
+  const [filterData, setFilterData] = React.useState([])
+  const [page, setPage] = React.useState(1)
+  const [perPage, setPerPage] = React.useState(1000)
+  const [q, setQ] = React.useState('')
+  const [total, setTotal] = React.useState(0)
+  const [checked, setChecked] = useState(true)
+  const [indexTab, setIndexTab] = React.useState(0)
+  const [gerencia, setGerencia] = React.useState('TODO')
 
-
-  const {isDarkMode,user} = useSelector(state => state.auth);
+  const { isDarkMode, user } = useSelector((state) => state.auth)
   const getData = async () => {
-    setLoading(true);
-    refTextInputSearch.current.clear();
-    setQ('');
-    setData([]);
-    setFilterData([]);
-    setGerencia('TODO');
+    setLoading(true)
+    refTextInputSearch.current.clear()
+    setQ('')
+    setData([])
+    setFilterData([])
+    setGerencia('TODO')
     try {
       const response = await axios.get('rrhh/personal-app', {
         params: {
@@ -76,35 +78,35 @@ const Users = ({navigation}) => {
           perPage: perPage,
           estado: indexTab ? 0 : 1,
         },
-      });
-      setData(response.data.data);
-      setFilterData(response.data.data);
-      setTotal(response.data.total);
+      })
+      setData(response.data.data)
+      setFilterData(response.data.data)
+      setTotal(response.data.total)
     } catch (error) {
-      Alert.alert('Error', 'Ocurrio un error al obtener datos');
-      console.log(error);
-      setLoading(false);
+      Alert.alert('Error', 'Ocurrio un error al obtener datos')
+      console.log(error)
+      setLoading(false)
     }
-    setLoading(false);
-  };
+    setLoading(false)
+  }
   const onRefresh = () => {
-    getData();
-  };
+    getData()
+  }
   useEffect(() => {
-    console.log('Datos del servidor');
-    getData();
-  }, [indexTab,isDarkMode]);
+    console.log('Datos del servidor')
+    getData()
+  }, [indexTab, isDarkMode])
   //busqueda
   useEffect(() => {
-    setLoading(true);
-    const searchData = _.filter(data, item => {
+    setLoading(true)
+    const searchData = _.filter(data, (item) => {
       if (gerencia === 'TODO') {
         return (
           item.nombre.toLowerCase().includes(q.toLowerCase()) ||
           item.ci.toLowerCase().includes(q.toLowerCase()) ||
           item.cargo.toLowerCase().includes(q.toLowerCase()) ||
           item.celular_per.toLowerCase().includes(q.toLowerCase())
-        );
+        )
       } else {
         return (
           (item.nombre.toLowerCase().includes(q.toLowerCase()) ||
@@ -112,72 +114,72 @@ const Users = ({navigation}) => {
             item.cargo.toLowerCase().includes(q.toLowerCase()) ||
             item.celular_per.toLowerCase().includes(q.toLowerCase())) &&
           item.sigla.toLowerCase() === gerencia.toLowerCase()
-        );
+        )
       }
-    });
-    setLoading(false);
-    console.log('cantidad encontrada:', searchData.length);
-    setFilterData(searchData);
-  }, [q, gerencia]);
+    })
+    setLoading(false)
+    console.log('cantidad encontrada:', searchData.length)
+    setFilterData(searchData)
+  }, [q, gerencia])
 
-  const navigateToDetail = item => {
-    navigation.push('Detail', {item});
-  };
+  const navigateToDetail = (item) => {
+    navigation.push('Detail', { item })
+  }
   const onEndReached = () => {
     if (page * perPage < total) {
-      setPage(page + 1);
+      setPage(page + 1)
     }
-    console.log('end reached');
-  };
+    console.log('end reached')
+  }
 
   const handleResetSearch = () => {
-    setFilterData(data);
-    setQ('');
-    refTextInputSearch.current.clear();
-  };
+    setFilterData(data)
+    setQ('')
+    refTextInputSearch.current.clear()
+  }
 
-  const changeHandler = q => {
-    setQ(q);
-  };
+  const changeHandler = (q) => {
+    setQ(q)
+  }
   const footerList = () => {
-    return <View style={{height: 40}} />;
-  };
-  const debouncedChangeHandler = useCallback(debounce(changeHandler, 500), []);
+    return <View style={{ height: 40 }} />
+  }
+  const debouncedChangeHandler = useCallback(debounce(changeHandler, 500), [])
 
   //Linking
-  const handleCallPress = celular => {
-    Linking.openURL(`tel:${celular}`);
-  };
+  const handleCallPress = (celular) => {
+    Linking.openURL(`tel:${celular}`)
+  }
 
   //Linking Whatsapp
-  const handleWhatsappPress = celular => {
-    Linking.openURL(`whatsapp://send?phone=${celular}`);
-  };
+  const handleWhatsappPress = (celular) => {
+    Linking.openURL(`whatsapp://send?phone=${celular}`)
+  }
 
   //Linking Email
-  const handleEmailPress = email => {
-    Linking.openURL(`mailto:${email}`);
-  };
+  const handleEmailPress = (email) => {
+    Linking.openURL(`mailto:${email}`)
+  }
 
-  const scrollY = React.useRef(new Animated.Value(0)).current;
+  const scrollY = React.useRef(new Animated.Value(0)).current
 
-  const ITEM_SIZE = 75;
+  const ITEM_SIZE = 75
   const getItem = (data, index) => {
-    return data[index];
-  };
+    return data[index]
+  }
   //render persona
-  const renderItem = ({item, index}) => {
+  const renderItem = ({ item, index }) => {
     const inputRange = [
       -1,
       0,
       index * (ITEM_SIZE + 8),
       (index + 2) * (ITEM_SIZE + 8),
-    ];
+    ]
 
     const scale = scrollY.interpolate({
       inputRange,
       outputRange: [1, 1, 1, 0],
-    });
+    })
     return (
       <BottomSheetModalProvider>
         <View
@@ -189,17 +191,20 @@ const Users = ({navigation}) => {
               : BACKGROUND_PRIMARY_LIGHT,
             // transform: [{scale}],
             elevation: 1,
-          }}>
+          }}
+        >
           <TouchableOpacity
             onPress={() => navigateToDetail(item)}
-            key={'person' + index}>
+            key={'person' + index}
+          >
             <View
               style={{
                 flex: 1,
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 height: ITEM_SIZE,
-              }}>
+              }}
+            >
               <View style={styles.avatar}>
                 <Image
                   source={{
@@ -218,7 +223,8 @@ const Users = ({navigation}) => {
                   flexDirection: 'column',
                   alignContent: 'space-between',
                   flex: 1,
-                }}>
+                }}
+              >
                 <View style={styles.description}>
                   <Text
                     style={{
@@ -228,7 +234,8 @@ const Users = ({navigation}) => {
                       color: isDarkMode
                         ? PRIMARY_TEXT_DARK
                         : PRIMARY_TEXT_LIGHT,
-                    }}>
+                    }}
+                  >
                     {item.nombre}
                   </Text>
 
@@ -241,7 +248,8 @@ const Users = ({navigation}) => {
                       color: isDarkMode
                         ? PRIMARY_TEXT_DARK
                         : PRIMARY_TEXT_LIGHT,
-                    }}>
+                    }}
+                  >
                     {item.cargo.length > 35
                       ? item.cargo.substring(0, 35) + '...'
                       : item.cargo}
@@ -253,8 +261,10 @@ const Users = ({navigation}) => {
                       color: isDarkMode
                         ? PRIMARY_TEXT_DARK
                         : PRIMARY_TEXT_LIGHT,
-                    }}>
-                    {user.rol_app>5?item.celular_per+'|':''} {item.e_mail_inst}
+                    }}
+                  >
+                    {user.rol_app > 5 ? item.celular_per + '|' : ''}{' '}
+                    {item.e_mail_inst}
                   </Text>
                   {indexTab == 0 ? null : (
                     <Text style={styles.baja}>
@@ -268,9 +278,18 @@ const Users = ({navigation}) => {
                 <View style={styles.sigla}>
                   <Text style={styles.siglaText}>{item.sigla}</Text>
                 </View>
-                <Text style={[styles.interno,{
-                  color: isDarkMode?PRIMARY_TEXT_DARK:PRIMARY_TEXT_LIGHT
-                }]}>{item.interno_inst}</Text>
+                <Text
+                  style={[
+                    styles.interno,
+                    {
+                      color: isDarkMode
+                        ? PRIMARY_TEXT_DARK
+                        : PRIMARY_TEXT_LIGHT,
+                    },
+                  ]}
+                >
+                  {item.interno_inst}
+                </Text>
               </View>
             </View>
           </TouchableOpacity>
@@ -284,16 +303,19 @@ const Users = ({navigation}) => {
               borderTopWidth: 1,
               paddingHorizontal: 25,
               paddingTop: 4,
-            }}>
+            }}
+          >
             <TouchableOpacity
               onPress={() => handleCallPress(item.celular_per)}
               style={styles.button}
-              key={'call' + index}>
+              key={'call' + index}
+            >
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                }}>
+                }}
+              >
                 <AntDesing
                   name="phone"
                   size={16}
@@ -309,7 +331,8 @@ const Users = ({navigation}) => {
                     fontSize: 12,
                     fontWeight: '400',
                     margin: 2,
-                  }}>
+                  }}
+                >
                   Llamar
                 </Text>
               </View>
@@ -317,12 +340,14 @@ const Users = ({navigation}) => {
             <TouchableOpacity
               onPress={() => handleWhatsappPress(item.celular_per)}
               style={styles.button}
-              key={'whatspp' + index}>
+              key={'whatspp' + index}
+            >
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                }}>
+                }}
+              >
                 <Ionicons
                   name="ios-logo-whatsapp"
                   size={16}
@@ -338,7 +363,8 @@ const Users = ({navigation}) => {
                     fontSize: 12,
                     fontWeight: '400',
                     margin: 2,
-                  }}>
+                  }}
+                >
                   Escribir
                 </Text>
               </View>
@@ -346,12 +372,14 @@ const Users = ({navigation}) => {
             <TouchableOpacity
               onPress={() => handleEmailPress(item.e_mail_inst)}
               style={styles.button}
-              key={'mail' + index}>
+              key={'mail' + index}
+            >
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
-                }}>
+                }}
+              >
                 <Ionicons
                   name="ios-mail-outline"
                   size={16}
@@ -367,7 +395,8 @@ const Users = ({navigation}) => {
                     fontSize: 12,
                     fontWeight: '400',
                     margin: 2,
-                  }}>
+                  }}
+                >
                   Enviar
                 </Text>
               </View>
@@ -375,23 +404,22 @@ const Users = ({navigation}) => {
           </View>
         </View>
       </BottomSheetModalProvider>
-    );
-  };
+    )
+  }
 
   const listTab = [
     {
       status: 'Activo',
-    }    
-  ];
-  if(user.rol_app>5){
-    listTab.push(
-    {
+    },
+  ]
+  if (user.rol_app > 5) {
+    listTab.push({
       status: 'Pasivo',
     })
   }
-  const setIndexFilter = index => {
-    setIndexTab(index);
-  };
+  const setIndexFilter = (index) => {
+    setIndexTab(index)
+  }
   //empty list
   const emptyView = () => {
     return (
@@ -401,56 +429,58 @@ const Users = ({navigation}) => {
           justifyContent: 'center',
           alignItems: 'center',
           marginTop: 20,
-        }}>
+        }}
+      >
         <Text
           style={{
             color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : PRIMARY_TEXT_LIGHT,
-          }}>
+          }}
+        >
           No se encotraron datos
         </Text>
       </View>
-    );
-  };
+    )
+  }
 
-  const bottomSheetRef = useRef(null);
+  const bottomSheetRef = useRef(null)
   // variables
-  const snapPoints = useMemo(() => ['30%', '40%', '55%'], []);
+  const snapPoints = useMemo(() => ['30%', '40%', '55%'], [])
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetRef.current?.present();
-  }, []);
+    bottomSheetRef.current?.present()
+  }, [])
 
-  const handleSetGerencia = name => {
-    setGerencia(name);
-  };
+  const handleSetGerencia = (name) => {
+    setGerencia(name)
+  }
   return (
     <BottomSheetModalProvider>
       <SafeAreaView
         style={{
           flex: 1,
           backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
-        }}>
-        <View style={{flex: 1}}>
-          <Title
-            title="Personal"
-            navigation={navigation}
-          />
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <Title title="Personal" navigation={navigation} />
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignContent: 'center',
               marginHorizontal: 5,
-            }}>
+            }}
+          >
             <View style={styles.listTab}>
               {listTab.map((t, index) => (
                 <TouchableOpacity
                   activeOpacity={0.9}
                   style={[
                     styles.btnTab,
-                    indexTab ===index && styles.btnTabActive,
+                    indexTab === index && styles.btnTabActive,
                   ]}
                   key={'btn' + index}
-                  onPress={() => setIndexFilter(index)}>
+                  onPress={() => setIndexFilter(index)}
+                >
                   <Text
                     style={{
                       fontSize: 16,
@@ -460,7 +490,8 @@ const Users = ({navigation}) => {
                         : indexTab == index
                         ? PRIMARY_TEXT_DARK
                         : PRIMARY_TEXT_LIGHT,
-                    }}>
+                    }}
+                  >
                     {t.status}
                   </Text>
                 </TouchableOpacity>
@@ -472,7 +503,8 @@ const Users = ({navigation}) => {
                 fontWeight: '400',
                 marginTop: 5,
                 color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-              }}>
+              }}
+            >
               Total: {filterData.length}/{total}
             </Text>
           </View>
@@ -490,7 +522,8 @@ const Users = ({navigation}) => {
                 width: Dimensions.get('window').width - 80,
                 padding: 10,
                 borderRadius: 20,
-              }}>
+              }}
+            >
               <Ionicons color={TERTIARY_COLOR} name="search" size={20} />
               <TextInput
                 ref={refTextInputSearch}
@@ -515,7 +548,8 @@ const Users = ({navigation}) => {
             <TouchableOpacity
               onPress={handlePresentModalPress}
               style={styles.button}
-              key={'mail'}>
+              key={'mail'}
+            >
               <View
                 style={{
                   flexDirection: 'row',
@@ -525,7 +559,8 @@ const Users = ({navigation}) => {
                   backgroundColor: isDarkMode
                     ? BACKGROUND_PRIMARY_DARK
                     : '#FFFFFF',
-                }}>
+                }}
+              >
                 <Ionicons
                   name="funnel"
                   size={16}
@@ -556,9 +591,9 @@ const Users = ({navigation}) => {
             <FlashList
               data={filterData}
               initialNumToRender={10}
-              renderItem={({item, index}) => renderItem({item, index})}
-              keyExtractor={item => item.id}
-              getItemCount={filterData => filterData.length}
+              renderItem={({ item, index }) => renderItem({ item, index })}
+              keyExtractor={(item) => item.id}
+              getItemCount={(filterData) => filterData.length}
               onEndReached={onEndReached}
               getItem={getItem}
               ListFooterComponent={footerList}
@@ -595,7 +630,8 @@ const Users = ({navigation}) => {
                   ? BACKGROUND_PRIMARY_DARK
                   : BACKGROUND_PRIMARY_LIGHT,
               },
-            ]}>
+            ]}
+          >
             <FilterPersons
               handleSetGerencia={handleSetGerencia}
               selected={gerencia}
@@ -606,8 +642,8 @@ const Users = ({navigation}) => {
         </BottomSheetModal>
       </SafeAreaView>
     </BottomSheetModalProvider>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   loader: {
@@ -637,7 +673,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   sigla: {
-    backgroundColor: '#664FEC',
+    backgroundColor: PRIMARY_COLOR,
     color: '#efefef',
     padding: 4,
     width: 45,
@@ -710,13 +746,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   interno: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   btnCancel: {
     marginLeft: -16,
-    marginTop:-6
+    marginTop: -6,
   },
   baja: {
     fontSize: 12,
@@ -753,6 +789,6 @@ const styles = StyleSheet.create({
   button: {
     padding: 1,
   },
-});
+})
 
-export default Users;
+export default Users
