@@ -2,7 +2,7 @@
   "expo": {
     "name": "AppiMT",
     "slug": "expo-rrhh",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -16,7 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "1",
+      "buildNumber": "3",
       "bundleIdentifier": "bo.miteleferico.intranetappi"
     },
     "android": {
@@ -24,34 +24,40 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "googleServicesFile":"./google-services.json",
-      "package": "bo.miteleferico.intranetappi"    
+      "googleServicesFile": "./google-services.json",
+      "package": "bo.miteleferico.intranetappi",
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.DOWNLOAD_WITHOUT_NOTIFICATION",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [    
+    "plugins": [
       "@config-plugins/react-native-blob-util",
-      "@config-plugins/react-native-pdf" 
+      "@config-plugins/react-native-pdf"       
     ],
     "extra": {
-      "eas": {
-        "build": {
-          "development":{
-            "developmentClient":true,
-            "distribution" : "internal"
-          },
-          "preview": {
-            "ios": {
-              "simulator" :true
+        "eas": {
+          "build": {
+            "development":{
+              "developmentClient":true,
+              "distribution" : "internal"
             },
-            "android": {
-              "buildType": "apk"
+            "preview": {
+              "ios": {
+                "simulator" :true
+              },
+              "android": {
+                "buildType": "apk"
+              }
             }
-          }
-        },
-        "projectId": "17bc0b3f-201b-47f5-a300-f7b9f0f74881"
-      }
+          },
+          "projectId": "17bc0b3f-201b-47f5-a300-f7b9f0f74881"
+        }
     }
   }
 }

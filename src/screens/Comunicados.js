@@ -35,7 +35,7 @@ import {
 } from '../utils/constants'
 //import dispatch
 import { setRefreshPage } from '../store/auth'
-
+import moment from 'moment'
 const Comunicados = ({ route, navigation }) => {
   const dispatch = useDispatch()
   const refTextInputSearch = React.createRef()
@@ -111,17 +111,15 @@ const Comunicados = ({ route, navigation }) => {
       <View
         key={index}
         style={{
-          flexDirection: 'row',
-          alignContent: 'center',
+          flexDirection: 'col',
+          //alignContent: 'center',
           justifyContent: 'space-between',
-          // elevation: 1,
-          // borderRadius: 10,
           backgroundColor: isDarkMode
             ? BACKGROUND_PRIMARY_DARK
             : BACKGROUND_PRIMARY_LIGHT,
           padding: 8,
           marginVertical: 5,
-          marginHorizontal: 10,
+          marginHorizontal: 5,
           borderRadius: 10,
         }}
       >
@@ -145,189 +143,59 @@ const Comunicados = ({ route, navigation }) => {
             </Text>
             <View
               style={{
-                // borderColor: isDarkMode ? '#9999' : "#999",
-                //borderWidth: 1,
-                borderRadius: 5,
-                paddingHorizontal: 5,
-                paddingVertical: 3,
-                marginVertical: 5,
-              }}
-            >
-              <Text
-                style={[
-                  styles.tipo,
-                  {
-                    color: isDarkMode
-                      ? PRIMARY_TEXT_DARK_LIGHT
-                      : PRIMARY_TEXT_LIGHT,
-                    fontWeight: 'bold',
-                  },
-                ]}
-              >
-                {item.tipo_boleta}
-              </Text>
-            </View>
-            {item.destino && (
-              <View style={{ flexDirection: 'row', marginVertical: 5 }}>
-                <IonIcons
-                  name="ios-location"
-                  size={16}
-                  color={isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#999'}
-                />
-                <Text
-                  style={[
-                    styles.cargo,
-                    {
-                      color: isDarkMode
-                        ? PRIMARY_TEXT_DARK_LIGHT
-                        : PRIMARY_TEXT_LIGHT,
-                    },
-                  ]}
-                >
-                  {item.destino}
-                </Text>
-              </View>
-            )}
-
-            <View
-              style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
+                alignItems: 'center',
                 marginTop: 5,
               }}
             >
-              <IonIcons
-                name="calendar"
-                size={14}
-                color={isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#333'}
-              />
-              <Text
-                style={[
-                  styles.hora,
-                  {
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 5,
+                }}
+              >
+                <IonIcons
+                  name="calendar-outline"
+                  size={20}
+                  color={isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#333'}
+                />
+                <Text
+                  style={{
+                    fontSize: 16,
                     marginLeft: 4,
+
                     color: isDarkMode
                       ? PRIMARY_TEXT_DARK_LIGHT
                       : PRIMARY_TEXT_LIGHT,
-                  },
-                ]}
+                  }}
+                >
+                  {moment(item.fecha).format('DD MMM YYYY')}
+                </Text>
+              </View>
+              <View
+                style={
+                  {
+                    // width: '100%',
+                    //alignSelf: 'right',
+                  }
+                }
               >
-                {item.fecha}
-              </Text>
-              <View style={{ width: 10 }}>
                 <Text
                   style={[
-                    styles.hora,
+                    styles.fecha,
                     {
-                      textAlign: 'center',
+                      fontSize: 16,
+                      textAlign: 'right',
                       color: isDarkMode
                         ? PRIMARY_TEXT_DARK_LIGHT
                         : PRIMARY_TEXT_LIGHT,
                     },
                   ]}
                 >
-                  {'-'}
+                  {item.gerencia}
                 </Text>
               </View>
-              <Text
-                style={[
-                  styles.hora,
-                  {
-                    color: isDarkMode
-                      ? PRIMARY_TEXT_DARK_LIGHT
-                      : PRIMARY_TEXT_LIGHT,
-                  },
-                ]}
-              >
-                {item.fecha_fin == item.fecha_ini ? '' : item.fecha_fin}{' '}
-                {item.hora_fin}
-              </Text>
-            </View>
-          </View>
-
-          <View
-            style={{
-              width: 100,
-              alignItems: 'center',
-              alignContent: 'space-around',
-              alignSelf: 'center',
-            }}
-          >
-            <View
-              style={{
-                width: 100,
-                borderRadius: 15,
-                padding: 2,
-                textAlign: 'center',
-                alignSelf: 'center',
-                alignItems: 'center',
-                borderColor:
-                  item.estado > 5
-                    ? PRIMARY_COLOR
-                    : item.estado == -2
-                    ? 'red'
-                    : '#CFA9FC',
-                //borderColor: item.estado > 5 ? PRIMARY_COLOR : '#CFA9FC',
-                borderWidth: 0,
-                //borderStyle: 'dotted',
-              }}
-            >
-              <Text
-                style={[
-                  styles.estadoText,
-                  {
-                    color:
-                      item.estado > 5
-                        ? isDarkMode
-                          ? '#f2f2f2'
-                          : PRIMARY_COLOR
-                        : '#686868',
-                  },
-                ]}
-              >
-                {item.estado_nombre}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'column',
-                alignContent: 'center',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: 90,
-                padding: 3,
-              }}
-            >
-              <Text
-                style={{
-                  color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                  fontSize: 11,
-                  textAlign: 'center',
-                }}
-              >
-                {item.aprobado_por}
-              </Text>
-              <Text
-                style={{
-                  color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                  fontSize: 11,
-                  textAlign: 'center',
-                }}
-              >
-                {item.fecha_aprobacion}
-              </Text>
-              {/* {item.ci?
-              (<Image
-                source={{
-                  uri: 'https://rrhh.miteleferico.bo/api/foto?c=' + item.ci,
-                }}
-                style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: 15,
-                  alignItems: 'center',
-                }}
-              />):null } */}
             </View>
           </View>
         </TouchableOpacity>
@@ -378,7 +246,7 @@ const Comunicados = ({ route, navigation }) => {
               backgroundColor: isDarkMode
                 ? BACKGROUND_PRIMARY_DARK
                 : BACKGROUND_PRIMARY_LIGHT,
-              width: Dimensions.get('window').width - 120,
+              width: Dimensions.get('window').width - 25,
               padding: 10,
               borderRadius: 20,
             }}
@@ -397,39 +265,6 @@ const Comunicados = ({ route, navigation }) => {
                 <IonIcons name="close-circle" color={'#9c9c9c'} size={26} />
               </Pressable>
             ) : null}
-          </View>
-          <View>
-            <TouchableOpacity
-              style={{
-                borderRadius: 30,
-                backgroundColor: PRIMARY_COLOR,
-                opacity: 1,
-                alignContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'row',
-                justifyContent: 'flex-start',
-                paddingHorizontal: 8,
-                paddingVertical: 5,
-              }}
-              onPress={() =>
-                navigation.navigate('editor-comunicado', {
-                  id: 0,
-                  user,
-                  isDarkMode,
-                })
-              }
-            >
-              <IonIcons name="ios-add" size={24} color={'white'} />
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: 12,
-                  fontWeight: 'bold',
-                }}
-              >
-                NUEVO
-              </Text>
-            </TouchableOpacity>
           </View>
         </View>
 
@@ -452,26 +287,6 @@ const Comunicados = ({ route, navigation }) => {
             onRefresh={onRefreshHandle}
           />
         )}
-
-        <TouchableOpacity
-          style={{
-            width: 60,
-            height: 60,
-            borderRadius: 30,
-            backgroundColor: PRIMARY_COLOR,
-            opacity: 1,
-            alignContent: 'center',
-            position: 'absolute',
-            bottom: 10,
-            left: Dimensions.get('window').width - 75,
-            alignItems: 'center',
-            flexDirection: 'row',
-            justifyContent: 'center',
-          }}
-          onPress={() => navigation.navigate('Boleta')}
-        >
-          <IonIcons name="ios-add" size={32} color={'white'} />
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   )
@@ -557,11 +372,11 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   description: {
-    flex: 1,
+    //flex: 1,
     flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    width: Dimensions.get('window').width - 100,
+    justifyContent: 'space-between',
+    //alignItems: 'flex-start',
+    //width: Dimensions.get('window').width - 20,
   },
   email: {
     fontSize: 10,

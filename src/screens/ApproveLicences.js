@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback, useState } from 'react'
 import {
   StyleSheet,
   View,
@@ -11,18 +11,19 @@ import {
   Text,
   Dimensions,
   Alert,
-} from 'react-native';
-import { useSelector } from 'react-redux';
-import debounce from 'lodash/debounce';
-import _ from 'lodash';
+  Modal,
+} from 'react-native'
+import { useSelector } from 'react-redux'
+import debounce from 'lodash/debounce'
+import _ from 'lodash'
 
-import { useQuery, useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import Title from '../components/Title';
-import { PRIMARY_COLOR, SECONDARY_COLOR } from '../utils/constants';
-import IonIcons from 'react-native-vector-icons/Ionicons';
+import { useQuery, useMutation } from '@tanstack/react-query'
+import axios from 'axios'
+import Title from '../components/Title'
+import { PRIMARY_COLOR, SECONDARY_COLOR } from '../utils/constants'
+import IonIcons from 'react-native-vector-icons/Ionicons'
 
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context'
 import {
   PRIMARY_TEXT,
   PRIMARY_TEXT_DARK,
@@ -33,87 +34,94 @@ import {
   BACKGROUND_PRIMARY_LIGHT,
   PRIMARY_TEXT_DARK_LIGHT,
   TERTIARY_COLOR,
-} from '../utils/constants';
+} from '../utils/constants'
 
 //ICONS
 
 const ApproveScreen = ({ navigation }) => {
-  const refTextInputSearch = React.createRef();
-  const [refresh, onRefresh] = React.useState(false);
-  const { isDarkMode } = useSelector(state => state.auth);
-  const [loading, setLoading] = useState(false);
-  const [filterData, setFilterData] = React.useState([]);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(100);
-  const [q, setQ] = useState('');
-  const [total, setTotal] = useState(0);
+  const refTextInputSearch = React.createRef()
+  const [refresh, onRefresh] = React.useState(false)
+  const { isDarkMode } = useSelector((state) => state.auth)
+  const [loading, setLoading] = useState(false)
+  const [filterData, setFilterData] = React.useState([])
+  const [page, setPage] = useState(1)
+  const [perPage, setPerPage] = useState(100)
+  const [q, setQ] = useState('')
+  const [total, setTotal] = useState(0)
+  const [showModal, setShowModal] = useState(false)
 
   const getLicenses = async () => {
-    const response = await axios.get('/rrhh/lista-permisos');
-    return response.data.data;
+    const response = await axios.get('/rrhh/lista-permisos')
+    return response.data.data
   }
   const queryLicenses = useQuery({
     queryKey: ['approve'],
     queryFn: getLicenses,
-  });
+  })
 
   useEffect(() => {
-    setFilterData(queryLicenses?.data);
-  }, [queryLicenses?.data]);
+    setFilterData(queryLicenses?.data)
+  }, [queryLicenses?.data])
 
   const handleResetSearch = () => {
-    setQ('');
+    setQ('')
     //setPage(1);
-    refTextInputSearch.current.clear();
-  };
+    refTextInputSearch.current.clear()
+  }
   useEffect(() => {
-    const searchData = _.filter(queryLicenses?.data, item => {
+    const searchData = _.filter(queryLicenses?.data, (item) => {
       return (
         item.justificacion.toLowerCase().includes(q.toLowerCase()) ||
         item.excepcion.toLowerCase().includes(q.toLowerCase()) ||
         item.nombre.toLowerCase().includes(q.toLowerCase())
-      );
-    });
-    setFilterData(searchData);
-  }, [q]);
-  const changeHandler = q => {
-    setQ(q);
-  };
-  const debouncedChangeHandler = useCallback(debounce(changeHandler, 800), []);
+      )
+    })
+    setFilterData(searchData)
+  }, [q])
+  const changeHandler = (q) => {
+    setQ(q)
+  }
+  const debouncedChangeHandler = useCallback(debounce(changeHandler, 800), [])
   const aprovePermision = async (data) => {
-    //console.log(data)
-    const response = await axios.post('/rrhh/aprobar-permiso', data);
-    return response.data.data;
+    setShowModal(true)
+    const response = await axios.post('/rrhh/aprobar-permiso', data)
+    return response.data.data
   }
   const mutationAprove = useMutation({
     mutationFn: (data) => aprovePermision(data),
     onSuccess: (data, variables, context) => {
+      setShowModal(false)
       if (variables.estado_solicitado === 6) {
-        Alert.alert("Se aprobó el permiso correctamente.")
+        Alert.alert('Se aprobó el permiso correctamente.')
       }
       if (variables.estado_solicitado === -2) {
-        Alert.alert("Se rechazo el permiso seleccionado.")
+        Alert.alert('Se rechazo el permiso seleccionado.')
       }
-      queryLicenses.refetch();
+      queryLicenses.refetch()
     },
     onError: (error, variables, context) => {
+      setShowModal(false)
       if (variables.estado_solicitado === 6) {
         Alert.alert('Error', ` Ocurrio un error al intentar Aprobar el permiso`)
       }
       if (variables.estado_solicitado === -2) {
-        Alert.alert('Error', ` Ocurrio un error al intentar Rechazar el permiso`)
-
+        Alert.alert(
+          'Error',
+          ` Ocurrio un error al intentar Rechazar el permiso`,
+        )
       }
-      console.log(`Errorcito ${error} `)
-      console.log(variables);
+      // console.log(`Errorcito ${error} `);
+      //console.log(variables);
     },
-  });
+  })
 
   //aprobar boleta
   const handleAprove = (item) => {
     Alert.alert(
       'Aprobar permiso',
-      '¿Esta usted seguro de aprobar el permiso solicitado por : \n' + item.nombre + ' ?',
+      '¿Esta usted seguro de aprobar el permiso solicitado por : \n' +
+        item.nombre +
+        ' ?',
       [
         {
           text: 'No',
@@ -126,13 +134,14 @@ const ApproveScreen = ({ navigation }) => {
           },
         },
       ],
-    );
-
+    )
   }
   const handleRechazo = (item) => {
     Alert.alert(
       'Rechazar permiso',
-      '¿Esta usted seguro de rechazar el permiso solicitado por : \n' + item.nombre + ' ?',
+      '¿Esta usted seguro de rechazar el permiso solicitado por : \n' +
+        item.nombre +
+        ' ?',
       [
         {
           text: 'No',
@@ -145,12 +154,8 @@ const ApproveScreen = ({ navigation }) => {
           },
         },
       ],
-    );
-
+    )
   }
-
-
-
 
   const emptyView = () => {
     return (
@@ -160,16 +165,18 @@ const ApproveScreen = ({ navigation }) => {
           justifyContent: 'center',
           alignItems: 'center',
           marginTop: 20,
-        }}>
+        }}
+      >
         <Text
           style={{
             color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : PRIMARY_TEXT_LIGHT,
-          }}>
+          }}
+        >
           No se encotraron boletas para aprobar
         </Text>
       </View>
-    );
-  };
+    )
+  }
   const renderItem = ({ item, index }) => {
     return (
       <View
@@ -185,13 +192,15 @@ const ApproveScreen = ({ navigation }) => {
           padding: 8,
           marginVertical: 3,
           // margin: 5,
-        }}>
+        }}
+      >
         <View style={styles.description}>
           <Text
             style={[
               styles.nombre,
               { color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT },
-            ]}>
+            ]}
+          >
             {item.justificacion}
           </Text>
           <Text
@@ -202,7 +211,8 @@ const ApproveScreen = ({ navigation }) => {
                   ? PRIMARY_TEXT_DARK_LIGHT
                   : PRIMARY_TEXT_LIGHT,
               },
-            ]}>
+            ]}
+          >
             {item.destino}
           </Text>
           <Text
@@ -213,14 +223,16 @@ const ApproveScreen = ({ navigation }) => {
                   ? PRIMARY_TEXT_DARK_LIGHT
                   : PRIMARY_TEXT_LIGHT,
               },
-            ]}>
+            ]}
+          >
             {item.excepcion}
           </Text>
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }}>
+            }}
+          >
             <Text
               style={[
                 styles.hora,
@@ -229,7 +241,8 @@ const ApproveScreen = ({ navigation }) => {
                     ? PRIMARY_TEXT_DARK_LIGHT
                     : PRIMARY_TEXT_LIGHT,
                 },
-              ]}>
+              ]}
+            >
               {item.fecha_ini} {item.hora_ini}
             </Text>
             <Text
@@ -240,8 +253,9 @@ const ApproveScreen = ({ navigation }) => {
                     ? PRIMARY_TEXT_DARK_LIGHT
                     : PRIMARY_TEXT_LIGHT,
                 },
-              ]}>
-              -{item.fecha_fin == item.fecha_ini ? '' : item.fecha_fin}
+              ]}
+            >
+              - {item.fecha_fin == item.fecha_ini ? ' ' : item.fecha_fin}
               {item.hora_fin}
             </Text>
           </View>
@@ -249,7 +263,8 @@ const ApproveScreen = ({ navigation }) => {
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }}>
+            }}
+          >
             <Text
               style={[
                 styles.nombres,
@@ -258,7 +273,8 @@ const ApproveScreen = ({ navigation }) => {
                     ? PRIMARY_TEXT_DARK_LIGHT
                     : PRIMARY_TEXT_LIGHT,
                 },
-              ]}>
+              ]}
+            >
               {item.nombre}
             </Text>
           </View>
@@ -269,7 +285,8 @@ const ApproveScreen = ({ navigation }) => {
             alignItems: 'center',
             alignContent: 'space-around',
             alignSelf: 'center',
-          }}>
+          }}
+        >
           <Image
             source={{
               uri: 'https://rrhh.miteleferico.bo/api/foto?c=' + item.ci,
@@ -282,8 +299,7 @@ const ApproveScreen = ({ navigation }) => {
               marginBottom: 5,
             }}
           />
-          <TouchableOpacity
-            onPress={() => handleAprove(item)}>
+          <TouchableOpacity onPress={() => handleAprove(item)}>
             <View
               style={{
                 width: 100,
@@ -294,12 +310,16 @@ const ApproveScreen = ({ navigation }) => {
                 alignItems: 'center',
                 backgroundColor: isDarkMode ? '#cccccc' : '#333333',
                 marginBottom: 4,
-              }}>
+              }}
+            >
               <Text
                 style={[
                   styles.estadoText,
-                  { color: isDarkMode ? PRIMARY_TEXT_LIGHT : PRIMARY_TEXT_DARK },
-                ]}>
+                  {
+                    color: isDarkMode ? PRIMARY_TEXT_LIGHT : PRIMARY_TEXT_DARK,
+                  },
+                ]}
+              >
                 Aprobar
               </Text>
             </View>
@@ -315,30 +335,32 @@ const ApproveScreen = ({ navigation }) => {
                 alignItems: 'center',
                 borderColor: isDarkMode ? '#666666' : '#333333',
                 borderWidth: 1,
-              }}>
+              }}
+            >
               <Text
                 style={[
                   styles.estadoText,
                   { color: isDarkMode ? '#666666' : '#333333' },
-                ]}>
+                ]}
+              >
                 Rechazar
               </Text>
             </View>
           </TouchableOpacity>
         </View>
       </View>
-    );
-  };
+    )
+  }
   const footerList = () => {
-    return <View style={{ height: 75 }} />;
-  };
+    return <View style={{ height: 75 }} />
+  }
   return (
     <SafeAreaView
       style={{
         flex: 1,
         backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
-      }}>
-
+      }}
+    >
       <View style={{ flex: 1 }}>
         <Title title="Aprobar permisos" navigation={navigation} />
         <View style={styles.viewSearch}>
@@ -355,7 +377,8 @@ const ApproveScreen = ({ navigation }) => {
               width: Dimensions.get('window').width - 140,
               padding: 10,
               borderRadius: 20,
-            }}>
+            }}
+          >
             <IonIcons color={TERTIARY_COLOR} name="search" size={20} />
             <TextInput
               ref={refTextInputSearch}
@@ -381,17 +404,56 @@ const ApproveScreen = ({ navigation }) => {
                   ? PRIMARY_TEXT_DARK_LIGHT
                   : PRIMARY_TEXT_LIGHT,
               },
-            ]}>
+            ]}
+          >
             Total: {filterData?.length} / {queryLicenses.data?.length}
           </Text>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={showModal}
+            onRequestClose={() => {
+              //Alert.alert('Modal has been closed.');
+              // setShowModal(!showModal);
+            }}
+          >
+            <View style={styles.centeredView}>
+              <View
+                style={[
+                  styles.modalView,
+                  {
+                    backgroundColor: isDarkMode
+                      ? BACKGROUND_PRIMARY_DARK
+                      : BACKGROUND_PRIMARY_LIGHT,
+                  },
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.modalText,
+                    {
+                      color: isDarkMode
+                        ? PRIMARY_TEXT_DARK_LIGHT
+                        : PRIMARY_TEXT_LIGHT,
+                    },
+                  ]}
+                >
+                  Espere un momento por favor...
+                </Text>
+                <ActivityIndicator />
+              </View>
+            </View>
+          </Modal>
         </View>
 
-        {queryLicenses.isLoading ? <ActivityIndicator size="large" style={styles.loader} /> : (
+        {queryLicenses.isLoading ? (
+          <ActivityIndicator size="large" style={styles.loader} />
+        ) : (
           <FlatList
             data={filterData}
             initialNumToRender={10}
             renderItem={({ item, index }) => renderItem({ item, index })}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             //getItemCount={filterData => filterData.length}
             // onEndReached={onEndReached}
             //getItem={getItem}
@@ -403,10 +465,10 @@ const ApproveScreen = ({ navigation }) => {
         )}
       </View>
     </SafeAreaView>
-  );
-};
+  )
+}
 
-export default ApproveScreen;
+export default ApproveScreen
 
 const styles = StyleSheet.create({
   loader: {
@@ -535,4 +597,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
-});
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    // backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+})

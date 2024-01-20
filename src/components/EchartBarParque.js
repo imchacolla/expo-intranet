@@ -1,4 +1,3 @@
-// import { SvgChart, SVGRenderer } from 'wrn-echarts';
 import SvgChart, { SVGRenderer } from 'wrn-echarts/svgChart'
 import * as echarts from 'echarts/core'
 import { useRef, useEffect } from 'react'
@@ -75,13 +74,6 @@ export default function App({
   const labels = _.map(data, function (d) {
     return d.gestion
   })
-  const colors = _.map(data, function (d) {
-    return d.color
-  })
-  const suma = _.sumBy(data, function (s) {
-    return s.value
-  })
-
   const areaStyle = {
     // opacity: 0.9,
     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [

@@ -59,11 +59,13 @@ export const usePushNotification = () => {
         setNotification(notification)
       },
     )
+
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
         console.log(response)
       },
     )
+
     return () => {
       Notifications.removeNotificationSubscription(notificationListener.current)
       Notifications.removeNotificationSubscription(responseListener.current)

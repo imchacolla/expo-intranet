@@ -37,277 +37,6 @@ import {
   PRIMARY_TEXT_LIGHT,
 } from '../utils/constants'
 
-const teamp = `### Features
-
-- Support Standard Markdown / CommonMark and GFM(GitHub Flavored Markdown);
-- Full-featured: Real-time Preview, Image (cross-domain) upload, Preformatted text/Code blocks/Tables insert, Code fold, Search replace, Read only, Themes, Multi-languages, L18n, HTML entities, Code syntax highlighting...;
-- Markdown Extras : Support ToC (Table of Contents), Emoji, Task lists, @Links...;
-- Compatible with all major browsers (IE8+), compatible Zepto.js and iPad;
-- Support identification, interpretation, fliter of the HTML tags;
-- Support TeX (LaTeX expressions, Based on KaTeX), Flowchart and Sequence Diagram of Markdown extended syntax;
-- Support AMD/CMD (Require.js & Sea.js) Module Loader, and Custom/define editor plugins;
-
-# Editor.md
-
-![](https://pandao.github.io/editor.md/images/logos/editormd-logo-180x180.png)
-
-
-##Headers (Underline)
-
-H1 Header (Underline)
-=============
-
-H2 Header (Underline)
--------------
-
-> Blockquotes
-
-Paragraphs and Line Breaks
-                    
-> "Blockquotes Blockquotes", [Link](http://localhost/)。
-
-###Links
-
-[Links](http://localhost/)
-
-[Links with title](http://localhost/ "link title")
-
-<link> : <https://github.com>
-
-[Reference link][id/name] 
-
-[id/name]: http://link-url/
-
-GFM a-tail link @pandao
-
-###Code Blocks (multi-language) & highlighting
-
-###Images
-
-Image:
-
-![](https://pandao.github.io/editor.md/examples/images/4.jpg)
-         
-----
-
-###Lists
-
-####Unordered list (-)
-
-- Item A
-- Item B
-- Item C
-     
-####Unordered list (*)
-
-* Item A
-* Item B
-* Item C
-
-####Unordered list (plus sign and nested)
-                
-+ Item A
-+ Item B
-    + Item B 1
-    + Item B 2
-    + Item B 3
-+ Item C
-    * Item C 1
-    * Item C 2
-    * Item C 3
-
-####Ordered list
-                
-1. Item A
-2. Item B
-3. Item C
-                
-----
-                    
-###Tables
-                    
-First Header  | Second Header
-------------- | -------------
-Content Cell  | Content Cell
-Content Cell  | Content Cell 
-
-| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-
-| Function name | Description                    |
-| ------------- | ------------------------------ |
-| 'help()'      | Display the help window.       |
-| 'destroy()'   | **Destroy your computer!**     |
-
-| Item      | Value |
-| --------- | -----:|
-| Computer  | $1600 |
-| Phone     |   $12 |
-| Pipe      |    $1 |
-
-| Left-Aligned  | Center Aligned  | Right Aligned |
-| :------------ |:---------------:| -----:|
-| col 3 is      | some wordy text | $1600 |
-| col 2 is      | centered        |   $12 |
-| zebra stripes | are neat        |    $1 |
-                
-----
-
-`
-const template = `
-# Editor de Markdown
-¡Escribe aquí!
-
-**NEGRILLA**
-
-SADJSAHL KJDSADSA
-
-![](https://s8c8k9q7.hostrycdn.com/wp-content/uploads/2021/09/img_613e0310ca4c0.jpg)
-`
-const markDownStyles = {
-  body: {},
-
-  // Headings
-  heading1: {
-    flexDirection: 'row',
-    fontSize: 32,
-  },
-  heading2: {
-    flexDirection: 'row',
-    fontSize: 24,
-  },
-  heading3: {
-    flexDirection: 'row',
-    fontSize: 18,
-  },
-  heading4: {
-    flexDirection: 'row',
-    fontSize: 16,
-  },
-  heading5: {
-    flexDirection: 'row',
-    fontSize: 13,
-  },
-  heading6: {
-    flexDirection: 'row',
-    fontSize: 11,
-  },
-
-  // Horizontal Rule
-  hr: {
-    backgroundColor: '#000000',
-    height: 1,
-  },
-
-  // Emphasis
-  strong: {
-    fontWeight: 'bold',
-  },
-  em: {
-    fontStyle: 'italic',
-  },
-  s: {
-    textDecorationLine: 'line-through',
-  },
-
-  // Blockquotes
-  blockquote: {
-    backgroundColor: '#F5F5F5',
-    borderColor: '#CCC',
-    borderLeftWidth: 4,
-    marginLeft: 5,
-    paddingHorizontal: 5,
-  },
-
-  // Lists
-  bullet_list: {},
-  ordered_list: {},
-  list_item: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-  },
-  // @pseudo class, does not have a unique render rule
-  bullet_list_icon: {
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  // @pseudo class, does not have a unique render rule
-  bullet_list_content: {
-    flex: 1,
-  },
-  // @pseudo class, does not have a unique render rule
-  ordered_list_icon: {
-    marginLeft: 10,
-    marginRight: 10,
-  },
-  // @pseudo class, does not have a unique render rule
-  ordered_list_content: {
-    flex: 1,
-  },
-
-  // Tables
-  table: {
-    borderWidth: 1,
-    borderColor: '#000000',
-    borderRadius: 3,
-  },
-  thead: {},
-  tbody: {},
-  th: {
-    flex: 1,
-    padding: 5,
-  },
-  tr: {
-    borderBottomWidth: 1,
-    borderColor: '#000000',
-    flexDirection: 'row',
-  },
-  td: {
-    flex: 1,
-    padding: 5,
-  },
-
-  // Links
-  link: {
-    textDecorationLine: 'underline',
-  },
-  blocklink: {
-    flex: 1,
-    borderColor: '#000000',
-    borderBottomWidth: 1,
-  },
-
-  // Images
-  image: {
-    flex: 1,
-  },
-
-  // Text Output
-  text: {},
-  textgroup: {},
-  paragraph: {
-    marginTop: 10,
-    marginBottom: 10,
-    flexWrap: 'wrap',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    width: '100%',
-  },
-  hardbreak: {
-    width: '100%',
-    height: 1,
-  },
-  softbreak: {},
-
-  // Believe these are never used but retained for completeness
-  pre: {},
-  inline: {},
-  span: {},
-}
-
 const Editor = ({ route, navigation }) => {
   const { id, user, isDarkMode } = route.params
   const [edit, setEdit] = useState(false)
@@ -331,6 +60,148 @@ const Editor = ({ route, navigation }) => {
   useEffect(() => {
     fetchDescription()
   }, [])
+  const markDownStyles = {
+    body: {
+      color: isDarkMode ? '#DADADA' : '#111',
+    },
+    // Headings
+    heading1: {
+      flexDirection: 'row',
+      fontSize: 32,
+    },
+    heading2: {
+      flexDirection: 'row',
+      fontSize: 24,
+    },
+    heading3: {
+      flexDirection: 'row',
+      fontSize: 18,
+    },
+    heading4: {
+      flexDirection: 'row',
+      fontSize: 16,
+    },
+    heading5: {
+      flexDirection: 'row',
+      fontSize: 13,
+    },
+    heading6: {
+      flexDirection: 'row',
+      fontSize: 11,
+    },
+
+    // Horizontal Rule
+    hr: {
+      backgroundColor: '#4E4E4E',
+      height: 1,
+    },
+
+    // Emphasis
+    strong: {
+      fontWeight: 'bold',
+    },
+    em: {
+      fontStyle: 'italic',
+    },
+    s: {
+      textDecorationLine: 'line-through',
+    },
+
+    // Blockquotes
+    blockquote: {
+      backgroundColor: '#F5F5F5',
+      borderColor: '#CCC',
+      borderLeftWidth: 4,
+      marginLeft: 5,
+      paddingHorizontal: 5,
+    },
+
+    // Lists
+    bullet_list: {},
+    ordered_list: {},
+    list_item: {
+      flexDirection: 'row',
+      justifyContent: 'flex-start',
+    },
+    // @pseudo class, does not have a unique render rule
+    bullet_list_icon: {
+      marginLeft: 10,
+      marginRight: 10,
+    },
+    // @pseudo class, does not have a unique render rule
+    bullet_list_content: {
+      flex: 1,
+    },
+    // @pseudo class, does not have a unique render rule
+    ordered_list_icon: {
+      marginLeft: 10,
+      marginRight: 10,
+    },
+    // @pseudo class, does not have a unique render rule
+    ordered_list_content: {
+      flex: 1,
+    },
+
+    // Tables
+    table: {
+      borderWidth: 1,
+      borderColor: '#232222',
+      borderRadius: 3,
+    },
+    thead: {},
+    tbody: {},
+    th: {
+      flex: 1,
+      padding: 5,
+    },
+    tr: {
+      borderBottomWidth: 1,
+      borderColor: '#232222',
+      flexDirection: 'row',
+    },
+    td: {
+      flex: 1,
+      padding: 5,
+    },
+
+    // Links
+    link: {
+      textDecorationLine: 'underline',
+    },
+    blocklink: {
+      flex: 1,
+      borderColor: '#666',
+      borderBottomWidth: 1,
+    },
+
+    // Images
+    image: {
+      flex: 1,
+    },
+
+    // Text Output
+    text: {},
+    textgroup: {},
+    paragraph: {
+      marginTop: 10,
+      marginBottom: 10,
+      flexWrap: 'wrap',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'flex-start',
+      width: '100%',
+    },
+    hardbreak: {
+      width: '100%',
+      height: 1,
+    },
+    softbreak: {},
+
+    // Believe these are never used but retained for completeness
+    pre: {},
+    inline: {},
+    span: {},
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -367,7 +238,7 @@ const Editor = ({ route, navigation }) => {
             gap: 5,
           }}
         >
-          <Pressable
+          {/* <Pressable
             style={{
               backgroundColor: PRIMARY_COLOR,
               padding: 5,
@@ -383,8 +254,8 @@ const Editor = ({ route, navigation }) => {
             >
               Guardar
             </Text>
-          </Pressable>
-          {edit ? (
+            </Pressable> */}
+          {/* {edit ? (
             <Pressable
               onPress={() => {
                 setEdit(false)
@@ -426,7 +297,7 @@ const Editor = ({ route, navigation }) => {
                 Editar
               </Text>
             </Pressable>
-          )}
+              )} */}
         </View>
       </View>
       <View
@@ -482,7 +353,7 @@ const Editor = ({ route, navigation }) => {
             value={description}
           />
         ) : (
-          <Markdown>{description}</Markdown>
+          <Markdown style={markDownStyles}>{description}</Markdown>
         )}
       </ScrollView>
     </SafeAreaView>

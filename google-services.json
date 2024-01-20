@@ -8,6 +8,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:5182626608:android:1c676cd509f2e15a2806f5",
+        "android_client_info": {
+          "package_name": "bo.miteleferico.intranetapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "5182626608-1cjrn5osnq1go84o4pb0lpva5rogv758.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBE2ypTNCFEfX85tfgHhbldu0Fp1lg5HFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "5182626608-1cjrn5osnq1go84o4pb0lpva5rogv758.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "5182626608-c052rrf5pr4hccu15afa9bhqb9snao8s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anncode.platzitripsapp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:5182626608:android:7b8c8f892c6f92f62806f5",
         "android_client_info": {
           "package_name": "bo.miteleferico.intranetappi"

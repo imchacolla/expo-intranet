@@ -25,6 +25,7 @@
     "core-js": "3.34.0",
     "echarts": "^5.4.3",
     "expo": "~49.0.15",
+    "expo-build-properties": "~0.8.3",
     "expo-constants": "~14.4.2",
     "expo-dev-client": "~2.4.12",
     "expo-device": "~5.4.0",

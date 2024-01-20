@@ -33,12 +33,20 @@ import EchartPieOruro from '../../components/EchartPieOruro'
 import MaxPasajeros from '../../components/MaxPasajeros'
 import SumPasajeros from '../../components/SumPasajeros'
 import MeanPasajeros from '../../components/MeanPasajeros'
+import EchartBarIngresos from '../../components/EchartBarIngresos'
 const HomeOruro = ({ navigation }) => {
-  const { ci, user, isDarkMode } = useSelector((state) => state.auth)
+  const isDarkMode = useSelector((state) => state.auth.isDarkMode)
   const [gestion, setGestion] = useState(new Date().getFullYear())
   const [dataYear, setDataYear] = useState([])
   const [month, setMonth] = useState(0)
+  const [refreshing, setRefreshing] = useState(false)
 
+  const [uuid, setUuid] = useState(new Date())
+
+  const onRefresh = React.useCallback(() => {
+    setUuid(new Date())
+    // wait(500).then(() => setRefreshing(false));
+  }, [])
   const dataYearFunction = () => {
     const data = []
     for (i = new Date().getFullYear(); i >= 2021; i--) {
@@ -57,29 +65,30 @@ const HomeOruro = ({ navigation }) => {
   }
   const getPasajeros = async () => {
     const url = `/pasajeros/oruro/${gestion}/${month}`
-    console.log(url)
+    //console.log(url)
     const response = await axios.get(url)
     return response.data.data
   }
-  const getVisitantesTipoGestion = async () => {
-    const url = `/pasajeros/visitantes-parque-app/${gestion}/${month}`
-    console.log(url)
 
-    const response = await axios.get(url)
+  const getIngresoMeses = async () => {
+    const response = await axios.get(`/ingresos/mes-oruro-app/${gestion}`)
+    console.log('ingresos', response.data)
     return response.data.data
   }
   const queryVisitantes = useQuery({
-    queryKey: ['oruro', gestion, month],
+    queryKey: ['oruro', gestion, month, uuid],
     queryFn: getPasajeros,
   })
   const queryVisitantesGestion = useQuery({
-    queryKey: ['oruro-gestion'],
+    queryKey: ['oruro-gestion', uuid],
     queryFn: getVisitantesGestion,
   })
-  const queryVisitantesTipo = useQuery({
-    queryKey: ['oruro-tipo', gestion, month],
-    queryFn: getVisitantesTipoGestion,
+
+  const queryIngresosMeses = useQuery({
+    queryKey: ['ingresos-mes-oruro', gestion, uuid],
+    queryFn: getIngresoMeses,
   })
+
   const setYearValue = (value) => {
     setGestion(value)
     setMonth(0)
@@ -92,7 +101,6 @@ const HomeOruro = ({ navigation }) => {
     //setNameMonth(itemMonth.name)
   }
   const PALETTE = [BACKGROUND_ORURO, '#7b1810', '#604d4a', '#db383c', '#e8e9e9']
-  console.log(queryVisitantesTipo.data)
   return (
     <SafeAreaView
       style={{
@@ -100,9 +108,14 @@ const HomeOruro = ({ navigation }) => {
         backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
       }}
     >
-      <Title title="Teleférico Turistico Oruro" navigation={navigation} />
+      <Title title="Teleférico Turístico Oruro" navigation={navigation} />
       <SocketOruro />
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View
           style={{
             backgroundColor: BACKGROUND_ORURO,
@@ -116,7 +129,7 @@ const HomeOruro = ({ navigation }) => {
             <EchartBarParque
               data={queryVisitantesGestion.data}
               isDarkMode={isDarkMode}
-              color={'#C8C8C8'}
+              color={'#D2BCC3'}
               colorChart={'#F9F6F5'}
               colorLabel={'#4f0509'}
               borderColor={'#9A7676'}
@@ -243,18 +256,32 @@ const HomeOruro = ({ navigation }) => {
           </View>
           <View
             style={{
+              paddingHorizontal: 5,
+            }}
+          >
+            <Text
+              style={{
+                color: isDarkMode ? PRIMARY_TEXT_DARK : BACKGROUND_ORURO,
+                fontSize: 20,
+                fontWeight: 'bold',
+              }}
+            >
+              Ingresos Bs.
+            </Text>
+          </View>
+          <View
+            style={{
               minHeight: 200,
             }}
           >
-            {queryVisitantesTipo.isSuccess && (
-              <EchartPieOruro
+            {queryIngresosMeses.isSuccess && (
+              <EchartBarIngresos
+                data={queryIngresosMeses.data}
                 isDarkMode={isDarkMode}
-                data={queryVisitantesTipo.data}
-                color={'#6a503f'}
-                colorChart={'#d8a674'}
-                colorLabel={PRIMARY_COLOR}
-                gestion={gestion}
-                palette={PALETTE}
+                color={BACKGROUND_ORURO}
+                colorChart={
+                  isDarkMode ? BACKGROUND_PRIMARY_DARK : BACKGROUND_LIGHT
+                }
               />
             )}
           </View>

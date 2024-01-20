@@ -14,7 +14,7 @@ import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { useQuery } from '@tanstack/react-query'
 import moment from 'moment'
-
+import axios from 'axios'
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons'
 import {
   PRIMARY_COLOR,
@@ -23,33 +23,26 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
 } from '../utils/constants'
-const url = 'https://adminweb.miteleferico.bo/api/anuncios-pimt'
+//const url = 'https://adminweb.miteleferico.bo/api/anuncios-pimt'
+//const url = '/intranet/comunicados'
 
 const CarouselHome = ({ navigation, pause, loading }) => {
   //get dark mode
+  const user = useSelector((state) => state.auth.user)
   const isDarkMode = useSelector((state) => state.auth.isDarkMode)
 
   const getAnuncios = async () => {
-    return await fetch(url)
-      .then((response) => response.json())
-      .then((json) => {
-        return json.data
-      })
+    const response = await axios.get('/intranet/comunicados-publicados')
+    return response.data.data
   }
   // Mutations
-
-  const goPage = useCallback(
-    async (data) => {
-      navigation.push('Editor')
-      //const url = 'https://www.miteleferico.bo/intranet/' + data
-      // Checking if the link is supported for links with custom URL scheme.
-
-      // Opening the link with some app, if the URL scheme is "http" the web link should be opened
-      // by some browser in the mobile
-      //await Linking.openURL(url);
-    },
-    [url],
-  )
+  const goPage = useCallback(async (data) => {
+    navigation.navigate('Editor', {
+      id: data,
+      user,
+      isDarkMode,
+    })
+  }, [])
 
   const { isLoading, isError, data, error, isSuccess } = useQuery({
     queryKey: ['anuncios', loading],
@@ -62,28 +55,7 @@ const CarouselHome = ({ navigation, pause, loading }) => {
   if (isError) {
     return <Text>Error: {isError}</Text>
   }
-  const getFondo = (s) => {
-    switch (s) {
-      case 'aviso':
-        return require('../../assets/anuncio.png')
-        break
-      case 'capacitacion':
-        return require('../../assets/capacitacion.png')
-        break
-      case 'noticias':
-        return require('../../assets/noticias.png')
-        break
-      case 'curso':
-        return require('../../assets/curso.png')
-        break
-      case 'evento':
-        return require('../../assets/evento.png')
-        break
-      default:
-        return require('../../assets/otros.png')
-        break
-    }
-  }
+
   const width = Dimensions.get('window').width
   return (
     <View style={{ flex: 1 }}>
@@ -144,14 +116,10 @@ const CarouselHome = ({ navigation, pause, loading }) => {
                         textTransform: 'uppercase',
                       }}
                     >
-                      {moment(data[index].attributes.createdAt).format(
-                        'MMM DD',
-                      )}
+                      {moment(data[index].fecha).format('MMM DD')}
                     </Text>
                   </View>
-                  <Pressable
-                    onPress={() => goPage(data[index].attributes?.slug)}
-                  >
+                  <Pressable onPress={() => goPage(data[index].id)}>
                     <View
                       style={{
                         justifyContent: 'center',
@@ -159,7 +127,6 @@ const CarouselHome = ({ navigation, pause, loading }) => {
                         flexDirection: 'column',
                         backgroundColor: '#2F3240',
                         borderBottomStartRadius: 10,
-                        //padding: 5,
                         height: 40,
                       }}
                     >
@@ -195,7 +162,7 @@ const CarouselHome = ({ navigation, pause, loading }) => {
                         },
                       ]}
                     >
-                      {data[index].attributes.titulo}
+                      {data[index].titulo}
                     </Text>
                   </View>
                 </View>

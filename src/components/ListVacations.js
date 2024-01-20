@@ -1,5 +1,5 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
 import {
   PRIMARY_COLOR,
   BACKGROUND_DARK,
@@ -8,105 +8,164 @@ import {
   BACKGROUND_PRIMARY_DARK,
   BACKGROUND_PRIMARY_LIGHT,
   BACKGROUND_LIGHT,
-} from '../utils/constants';
-const ListVacations = ({vacations, isDarkMode}) => {
+} from '../utils/constants'
+const GESTION = new Date().getFullYear()
+const ListVacations = ({ vacations, isDarkMode }) => {
+  const total = vacations.reduce(
+    (total, resultado) => total + Number(resultado.dias),
+    0,
+  )
   return (
     <View
       style={{
-        paddingHorizontal: 20,
-      }}>
+        paddingHorizontal: 10,
+      }}
+    >
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          paddingVertical: 4,
+        }}
+      >
+        <Text
+          style={{
+            marginVertical: 8,
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+          }}
+        >
+          Programación: {GESTION}{' '}
+        </Text>
+        <Text
+          style={{
+            marginVertical: 8,
+            fontSize: 18,
+            fontWeight: 'bold',
+            color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+          }}
+        >
+          {total} días
+        </Text>
+      </View>
+
       <View
         style={{
           width: '100%',
-        }}>
+        }}
+      >
         <View
           style={[
             styles.modalView,
             {
               backgroundColor: 'transparent',
             },
-          ]}>
+          ]}
+        >
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-            }}>
-            <View
-              style={{
-                borderBottomWidth: 2,
-                borderBottomColor: PRIMARY_COLOR,
-                paddingBottom: 3,
-              }}>
+              borderBottomWidth: 1,
+              borderTopWidth: 1,
+              paddingVertical: 4,
+              borderBottomColor: PRIMARY_COLOR,
+              borderTopColor: PRIMARY_COLOR,
+            }}
+          >
+            <View style={{}}>
               <Text
                 style={{
-                  marginRight: 20,
                   fontWeight: 'bold',
                   color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                }}>
+                }}
+              >
                 FECHA INICIO
               </Text>
             </View>
-            <View
-              style={{
-                borderBottomWidth: 2,
-                borderBottomColor: PRIMARY_COLOR,
-              }}>
+            <View style={{}}>
               <Text
                 style={{
-                  marginRight: 20,
                   fontWeight: 'bold',
                   color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                }}>
+                }}
+              >
                 FECHA FIN
               </Text>
             </View>
-            <View
-              style={{
-                borderBottomWidth: 2,
-                borderBottomColor: PRIMARY_COLOR,
-              }}>
+            <View style={{}}>
               <Text
                 style={{
                   fontWeight: 'bold',
                   color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                }}>
+                }}
+              >
+                ESTADO
+              </Text>
+            </View>
+            <View style={{}}>
+              <Text
+                style={{
+                  fontWeight: 'bold',
+                  color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+                }}
+              >
                 DIAS
               </Text>
             </View>
           </View>
-          <View style={{height: 5}}></View>
+          <View style={{ height: 5 }}></View>
           {vacations.map((v, i) => (
             <View
               key={i}
               style={{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-              }}>
-              <View style={{textAlign: 'left', margin: 2}}>
+                borderBottomWidth: 1,
+                borderBottomColor: '#ccc',
+                marginVertical: 5,
+                paddingBottom: 4,
+              }}
+            >
+              <View style={{}}>
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: 14,
                     textAlign: 'left',
                     color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                  }}>
+                  }}
+                >
                   {v.fecha_ini}
                 </Text>
               </View>
-              <View>
+              <View style={{}}>
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: 14,
                     color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                  }}>
+                  }}
+                >
                   {v.fecha_fin}
                 </Text>
               </View>
-              <View>
+              <View style={{}}>
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: 14,
                     color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
-                  }}>
+                  }}
+                >
+                  {v.estado_descripcion}
+                </Text>
+              </View>
+              <View style={{}}>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+                  }}
+                >
                   {v.dias}
                 </Text>
               </View>
@@ -115,9 +174,9 @@ const ListVacations = ({vacations, isDarkMode}) => {
         </View>
       </View>
     </View>
-  );
-};
+  )
+}
 
-export default ListVacations;
+export default ListVacations
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({})

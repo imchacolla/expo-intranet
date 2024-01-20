@@ -83,7 +83,7 @@ export default function App({
   llenaDatos(data.GSUCT)
   llenaDatos(data.GDP)
 
-  console.log(mujeres, varones)
+  //console.log(mujeres, varones)
 
   const areaStyle = {
     // opacity: 0.9,

@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "AppiMT",
+    "slug": "expo-rrhh",
+    "version": "1.0.3",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E9E9E9"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "buildNumber": "3",
+      "bundleIdentifier": "bo.miteleferico.intranetappi"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "googleServicesFile":"./google-services.json",
+      "package": "bo.miteleferico.intranetappi"    
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [    
+      "@config-plugins/react-native-blob-util",
+      "@config-plugins/react-native-pdf" 
+    ],
+    "extra": {
+      "eas": {
+        "build": {
+          "development":{
+            "developmentClient":true,
+            "distribution" : "internal"
+          },
+          "preview": {
+            "ios": {
+              "simulator" :true
+            },
+            "android": {
+              "buildType": "apk"
+            }
+          }
+        },
+        "projectId": "17bc0b3f-201b-47f5-a300-f7b9f0f74881"
+      }
+    }
+  }
+}

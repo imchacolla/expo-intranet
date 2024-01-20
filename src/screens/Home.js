@@ -45,7 +45,7 @@ const SPACING = 5
 //const ITEM_SIZE = width * 0.38;
 const ITEM_SIZE = 120
 const SPACER_ITEM_SIZE = (width - ITEM_SIZE) / 2
-
+const GESTION = new Date().getFullYear()
 const HomeScreen = ({ navigation }) => {
   const ci = useSelector((state) => state.auth.ci)
   const isDarkMode = useSelector((state) => state.auth.isDarkMode)
@@ -55,6 +55,7 @@ const HomeScreen = ({ navigation }) => {
   const [birthdays, setBirthdays] = useState([])
   const [totalVacations, setTotalVacations] = useState(0)
   const [nextVacation, setNextVacation] = useState(null)
+  const [totalProgramado, setTotalProgramado] = useState(0)
   const [vacations, setVacations] = useState([])
   const [personal, setPersonal] = useState(null)
   const [edades, setEdades] = useState(null)
@@ -96,8 +97,10 @@ const HomeScreen = ({ navigation }) => {
   //proxmimos cumpleañeros
 
   const getVacations = async () => {
-    const response = await axios.get('/rrhh/vacations-programed')
+    const response = await axios.get('/rrhh/vacations-programed-app')
     setVacations(response.data.data)
+    setTotalProgramado(response.data.total)
+    //console.log('vacations', response.data)
     return response.data.data
   }
 
@@ -114,13 +117,13 @@ const HomeScreen = ({ navigation }) => {
   }
   const getEdades = async () => {
     const response = await axios.get('/rrhh/edades-chart')
-    console.log(response.data.data)
+    //console.log(response.data.data)
     setEdades(response.data.data)
   }
 
   const getNextVacation = async () => {
     const response = await axios.get('/rrhh/next-vacation')
-    //console.log(response.data.data);
+    //console.log(response.data.data)
     setNextVacation(response.data.data)
     setRefreshing(false)
   }
@@ -211,97 +214,108 @@ const HomeScreen = ({ navigation }) => {
     return <ActivityIndicator color={PRIMARY_COLOR} />
   }
   return (
-    <BottomSheetModalProvider>
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
-        }}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollView}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: isDarkMode ? BACKGROUND_DARK : BACKGROUND_LIGHT,
+      }}
+    >
+      <BottomSheetModalProvider>
+        <Title title="Inicio" navigation={navigation} />
+
+        <View
+          style={{
+            width: width - 10,
+            minHeight: 125,
+            backgroundColor: isDarkMode
+              ? BACKGROUND_PRIMARY_DARK
+              : BACKGROUND_PRIMARY_LIGHT,
+
+            marginBottom: 5,
+            marginHorizontal: 5,
+            paddingHorizontal: 5,
+            borderRadius: 10,
+          }}
         >
-          <Title title="Inicio" navigation={navigation} />
-
-          <View style={{}}>
-            <View
-              style={{
-                width: width - 10,
-                minHeight: 125,
-                backgroundColor: isDarkMode
-                  ? BACKGROUND_PRIMARY_DARK
-                  : BACKGROUND_PRIMARY_LIGHT,
-
-                marginBottom: 5,
-                marginHorizontal: 5,
-                paddingHorizontal: 5,
-                borderRadius: 10,
+          <View style={{ flexDirection: 'row' }}>
+            <Image
+              source={{
+                uri: 'https://rrhh.miteleferico.bo/api/foto?c=' + ci,
               }}
-            >
-              <View style={{ flexDirection: 'row' }}>
-                <Image
-                  source={{
-                    uri: 'https://rrhh.miteleferico.bo/api/foto?c=' + ci,
-                  }}
-                  style={{
-                    marginVertical: 10,
-                    marginHorizontal: 5,
-                    width: 60,
-                    height: 60,
-                    borderRadius: 30,
-                  }}
-                />
-                <View style={{ marginTop: 5 }}>
-                  <Text
-                    style={[
-                      styles.nombre,
-                      {
-                        color: isDarkMode
-                          ? PRIMARY_TEXT_DARK
-                          : PRIMARY_TEXT_LIGHT,
-                      },
-                    ]}
-                  >
-                    {data.nombres}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.apellido,
-                      {
-                        color: isDarkMode
-                          ? PRIMARY_TEXT_DARK
-                          : PRIMARY_TEXT_LIGHT,
-                      },
-                    ]}
-                  >
-                    {data.apellidos}
-                  </Text>
-                  <Text
-                    style={[
-                      styles.cargo,
-                      {
-                        color: isDarkMode
-                          ? PRIMARY_TEXT_DARK
-                          : PRIMARY_TEXT_LIGHT,
-                      },
-                    ]}
-                  >
-                    {data.cargo}
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  borderTopWidth: 1,
-                  borderTopColor: PRIMARY_COLOR,
-                  marginTop: 8,
-                }}
+              style={{
+                marginVertical: 10,
+                marginHorizontal: 5,
+                width: 60,
+                height: 60,
+                borderRadius: 30,
+              }}
+            />
+            <View style={{ marginTop: 5 }}>
+              <Text
+                style={[
+                  styles.nombre,
+                  {
+                    color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+                  },
+                ]}
               >
+                {data.nombres}
+              </Text>
+              <Text
+                style={[
+                  styles.apellido,
+                  {
+                    color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+                  },
+                ]}
+              >
+                {data.apellidos}
+              </Text>
+              <Text
+                style={[
+                  styles.cargo,
+                  {
+                    color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+                  },
+                ]}
+              >
+                {data.cargo}
+              </Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              borderTopWidth: 1,
+              borderTopColor: PRIMARY_COLOR,
+              marginTop: 8,
+            }}
+          >
+            <View style={{ flexDirection: 'row' }}>
+              <Text
+                style={[
+                  styles.vacations,
+                  {
+                    color: isDarkMode ? '#f2f2f2' : '#333',
+                  },
+                ]}
+              >
+                {totalVacations}
+              </Text>
+              <Text
+                style={[
+                  styles.descriptionVacation,
+                  {
+                    color: isDarkMode ? PRIMARY_TEXT_DARK_LIGHT : '#666',
+                  },
+                ]}
+              >
+                Días de vacación disponible
+              </Text>
+            </View>
+            {totalProgramado > 0 && (
+              <TouchableOpacity onPress={() => handlePresentModalPress()}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text
                     style={[
@@ -311,7 +325,7 @@ const HomeScreen = ({ navigation }) => {
                       },
                     ]}
                   >
-                    {totalVacations}
+                    {totalProgramado}
                   </Text>
                   <Text
                     style={[
@@ -321,173 +335,149 @@ const HomeScreen = ({ navigation }) => {
                       },
                     ]}
                   >
-                    Días de vacación disponible
+                    Días programados gestion: {GESTION}
                   </Text>
                 </View>
-                {nextVacation?.map((v, i) => (
-                  <TouchableOpacity
-                    onPress={() => handlePresentModalPress()}
-                    key={i}
-                  >
-                    <View style={{ flexDirection: 'row' }} key={i}>
-                      <Text
-                        style={[
-                          styles.vacations,
-                          {
-                            color: isDarkMode ? '#f2f2f2' : '#333',
-                          },
-                        ]}
-                      >
-                        {v.dias}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.descriptionVacation,
-                          {
-                            color: isDarkMode
-                              ? PRIMARY_TEXT_DARK_LIGHT
-                              : '#666',
-                          },
-                        ]}
-                      >
-                        Prox. programación {v.fecha_ini}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            </View>
-            <View
-              style={{
-                justifyContent: 'flex-start',
-                flexDirection: 'row',
-
-                alignContent: 'center',
-              }}
-            >
-              <Text
-                style={[
-                  styles.subtitle,
-                  {
-                    color: isDarkMode ? '#b2b2b2' : PRIMARY_TEXT_LIGHT,
-                  },
-                ]}
-              >
-                Próximos cumpleaños
-              </Text>
-            </View>
-            {birthdays && (
-              <Animated.FlatList
-                data={birthdays}
-                horizontal
-                initialScrollIndex={0}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={
-                  {
-                    //alignItems: 'center',
-                  }
-                }
-                decelerationRate={0}
-                bounces={false}
-                keyExtractor={(item, index) => index.toString()}
-                onScroll={Animated.event(
-                  [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-                  { useNativeDriver: true },
-                )}
-                snapToInterval={ITEM_SIZE}
-                scrollEventThrottle={16}
-                renderItem={({ item, index }) => {
-                  const inputRange = [
-                    (index - 1) * ITEM_SIZE,
-                    index * ITEM_SIZE,
-                    (index + 1) * ITEM_SIZE,
-                  ]
-                  const opacity = scrollX.interpolate({
-                    inputRange,
-                    outputRange: [1, 1, 0.5],
-                  })
-                  const translateY = scrollX.interpolate({
-                    inputRange,
-                    outputRange: [0, 0, 50],
-                  })
-                  const scale = scrollX.interpolate({
-                    inputRange,
-                    outputRange: [1, 1, 0.5],
-                  })
-
-                  return (
-                    <View style={{ width: ITEM_SIZE }}>
-                      <Animated.View
-                        style={{
-                          opacity,
-                          transform: [{ scale }],
-                          elevation: 1,
-                          //scale,
-                        }}
-                      >
-                        <View
-                          style={{
-                            marginHorizontal: SPACING,
-                            //padding: SPACING * 2,
-                            paddingVertical: SPACING * 2,
-                            paddingHorizontal: 2,
-                            alignItems: 'center',
-                            backgroundColor: isDarkMode
-                              ? BACKGROUND_PRIMARY_DARK
-                              : BACKGROUND_PRIMARY_LIGHT,
-                            borderRadius: 10,
-                            minHeight: 120,
-                          }}
-                        >
-                          <Image
-                            source={{
-                              uri:
-                                'https://rrhh.miteleferico.bo/api/foto?c=' +
-                                item.ci,
-                              //+ '&w=500',
-                            }}
-                            style={{
-                              width: 70,
-                              height: 70,
-                              borderTopRightRadius: 35,
-                              borderBottomRightRadius: 35,
-                              borderBottomLeftRadius: 35,
-                            }}
-                          />
-                          <View style={styles.description}>
-                            <Text
-                              style={{
-                                fontSize: 12,
-                                fontWeight: '400',
-                                marginLeft: 3,
-                                color: isDarkMode
-                                  ? PRIMARY_TEXT_DARK
-                                  : PRIMARY_TEXT_LIGHT,
-                              }}
-                            >
-                              {item.nombre}
-                            </Text>
-                            <View style={styles.itemFecha}>
-                              <Text
-                                style={[
-                                  styles.textFecha,
-                                  {
-                                    color: isDarkMode ? '#f2f2f2' : '#333',
-                                  },
-                                ]}
-                              >
-                                {item.fecha}
-                              </Text>
-                            </View>
-                          </View>
-                        </View>
-                      </Animated.View>
-                    </View>
-                  )
-                }}
-              />
+              </TouchableOpacity>
             )}
           </View>
+        </View>
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          <View
+            style={{
+              justifyContent: 'flex-start',
+              flexDirection: 'row',
+
+              alignContent: 'center',
+            }}
+          >
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: isDarkMode ? '#b2b2b2' : PRIMARY_TEXT_LIGHT,
+                },
+              ]}
+            >
+              Próximos cumpleaños
+            </Text>
+          </View>
+          {birthdays && (
+            <Animated.FlatList
+              data={birthdays}
+              horizontal
+              initialScrollIndex={0}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={
+                {
+                  //alignItems: 'center',
+                }
+              }
+              decelerationRate={0}
+              bounces={false}
+              keyExtractor={(item, index) => index.toString()}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: true },
+              )}
+              snapToInterval={ITEM_SIZE}
+              scrollEventThrottle={16}
+              renderItem={({ item, index }) => {
+                const inputRange = [
+                  (index - 1) * ITEM_SIZE,
+                  index * ITEM_SIZE,
+                  (index + 1) * ITEM_SIZE,
+                ]
+                const opacity = scrollX.interpolate({
+                  inputRange,
+                  outputRange: [1, 1, 0.5],
+                })
+                const translateY = scrollX.interpolate({
+                  inputRange,
+                  outputRange: [0, 0, 50],
+                })
+                const scale = scrollX.interpolate({
+                  inputRange,
+                  outputRange: [1, 1, 0.5],
+                })
+
+                return (
+                  <View style={{ width: ITEM_SIZE }}>
+                    <Animated.View
+                      style={{
+                        opacity,
+                        transform: [{ scale }],
+                        elevation: 1,
+                        //scale,
+                      }}
+                    >
+                      <View
+                        style={{
+                          marginHorizontal: SPACING,
+                          //padding: SPACING * 2,
+                          paddingVertical: SPACING * 2,
+                          paddingHorizontal: 2,
+                          alignItems: 'center',
+                          backgroundColor: isDarkMode
+                            ? BACKGROUND_PRIMARY_DARK
+                            : BACKGROUND_PRIMARY_LIGHT,
+                          borderRadius: 10,
+                          minHeight: 120,
+                        }}
+                      >
+                        <Image
+                          source={{
+                            uri:
+                              'https://rrhh.miteleferico.bo/api/foto?c=' +
+                              item.ci,
+                            //+ '&w=500',
+                          }}
+                          style={{
+                            width: 70,
+                            height: 70,
+                            borderTopRightRadius: 35,
+                            borderBottomRightRadius: 35,
+                            borderBottomLeftRadius: 35,
+                          }}
+                        />
+                        <View style={styles.description}>
+                          <Text
+                            style={{
+                              fontSize: 12,
+                              fontWeight: '400',
+                              marginLeft: 3,
+                              color: isDarkMode
+                                ? PRIMARY_TEXT_DARK
+                                : PRIMARY_TEXT_LIGHT,
+                            }}
+                          >
+                            {item.nombre}
+                          </Text>
+                          <View style={styles.itemFecha}>
+                            <Text
+                              style={[
+                                styles.textFecha,
+                                {
+                                  color: isDarkMode ? '#f2f2f2' : '#333',
+                                },
+                              ]}
+                            >
+                              {item.fecha}
+                            </Text>
+                          </View>
+                        </View>
+                      </View>
+                    </Animated.View>
+                  </View>
+                )
+              }}
+            />
+          )}
           <View
             style={{
               flexDirection: 'row',
@@ -652,8 +642,8 @@ const HomeScreen = ({ navigation }) => {
             <ListVacations vacations={vacations} isDarkMode={isDarkMode} />
           </View>
         </BottomSheetModal>
-      </SafeAreaView>
-    </BottomSheetModalProvider>
+      </BottomSheetModalProvider>
+    </SafeAreaView>
   )
 }
 
@@ -791,7 +781,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   scrollView: {
-    flex: 1,
+    marginVertical: 1,
     //backgroundColor: 'pink',
     // alignItems: 'center',
     //justifyContent: 'center',

@@ -69,16 +69,8 @@ const Drawer = createDrawerNavigator()
 const Tab = createBottomTabNavigator()
 
 const App = () => {
-  const { expoPushToken } = usePushNotification()
-  console.log('expoPushToken', expoPushToken)
-
-  //OneSignal.Debug.setLogLevel(LogLevel.Verbose);
-  /*   OneSignal.initialize("21fcaba8-c1d4-4ff9-bc5b-aecc55946b24");
-  
-    // Also need enable notifications to complete OneSignal setup
-    OneSignal.Notifications.requestPermission(true);
-  
-   */
+  //const { expoPushToken } = usePushNotification()
+  //console.log('expoPushToken', expoPushToken)
   const RootNavigation = () => {
     const dispatch = useDispatch()
     const [isLoading, setIsLoading] = React.useState(true)
@@ -88,15 +80,6 @@ const App = () => {
     //const scheme = useColorScheme();
 
     React.useEffect(() => {
-      //register OneSignalId
-      /*  OneSignal.getDeviceState().then(function (externalUserId) {
-         dispatch(setOneSignalId(externalUserId.userId));
-         //userID = externalUserId.userId;
-         //console.log('userID: ', externalUserId.userId);
-       }); */
-
-      //dispatch(setOneSignalId(userId));
-
       const refreshToken = async (token) => {
         try {
           const response = await axios.post(

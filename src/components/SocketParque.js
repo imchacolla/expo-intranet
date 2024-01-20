@@ -50,7 +50,7 @@ const SocketParque = ({ navigation }) => {
       >
         <Text
           style={{
-            color: isDarkMode ? '#999' : PRIMARY_TEXT_LIGHT,
+            color: isDarkMode ? '#999' : '#673400ff',
           }}
         >
           Visitantes
@@ -60,7 +60,7 @@ const SocketParque = ({ navigation }) => {
             fontSize: 36,
             textAlign: 'center',
             fontWeight: '600',
-            color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+            color: isDarkMode ? PRIMARY_TEXT_DARK : '#673400ff',
           }}
         >
           {new Intl.NumberFormat('es-ES').format(round(pasajerosTodo, 0))}

@@ -44,7 +44,7 @@ const { width, height } = Dimensions.get('screen')
 
 const Login = ({ navigation }) => {
   const { expoPushToken } = usePushNotification()
-
+  console.log(expoPushToken)
   const dispatch = useDispatch()
   const { token, loading, error, isDarkMode, oneSignalId } = useSelector(
     (state) => state.auth,

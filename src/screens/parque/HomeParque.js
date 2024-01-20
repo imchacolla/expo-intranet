@@ -36,7 +36,14 @@ const HomeParque = ({ navigation }) => {
   const [gestion, setGestion] = useState(new Date().getFullYear())
   const [dataYear, setDataYear] = useState([])
   const [month, setMonth] = useState(0)
+  const [refreshing, setRefreshing] = useState(false)
 
+  const [uuid, setUuid] = useState(new Date())
+
+  const onRefresh = React.useCallback(() => {
+    setUuid(new Date())
+    // wait(500).then(() => setRefreshing(false));
+  }, [])
   const dataYearFunction = () => {
     const data = []
     for (i = new Date().getFullYear(); i >= 2021; i--) {
@@ -59,6 +66,7 @@ const HomeParque = ({ navigation }) => {
     const response = await axios.get(url)
     return response.data.data
   }
+
   const getVisitantesTipoGestion = async () => {
     const url = `/pasajeros/visitantes-parque-app/${gestion}/${month}`
     console.log(url)
@@ -67,15 +75,15 @@ const HomeParque = ({ navigation }) => {
     return response.data.data
   }
   const queryVisitantes = useQuery({
-    queryKey: ['visitantes', gestion, month],
+    queryKey: ['visitantes', gestion, month, uuid],
     queryFn: getVisitantes,
   })
   const queryVisitantesGestion = useQuery({
-    queryKey: ['visitantes-gestion'],
+    queryKey: ['visitantes-gestion', uuid],
     queryFn: getVisitantesGestion,
   })
   const queryVisitantesTipo = useQuery({
-    queryKey: ['visitantes-tipo', gestion, month],
+    queryKey: ['visitantes-tipo', gestion, month, uuid],
     queryFn: getVisitantesTipoGestion,
   })
   const setYearValue = (value) => {
@@ -90,7 +98,7 @@ const HomeParque = ({ navigation }) => {
     //setNameMonth(itemMonth.name)
   }
   const PALETTE = [
-    '#6a503f',
+    '#673400ff',
     '#d8a674',
     '#e2c0a4',
     '#c7bd82',
@@ -108,14 +116,20 @@ const HomeParque = ({ navigation }) => {
       <Title title="PCyMT" navigation={navigation} />
 
       <SocketParque />
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {queryVisitantesGestion.isSuccess && (
           <EchartBarParque
             data={queryVisitantesGestion.data}
             isDarkMode={isDarkMode}
-            color={'#6a503f'}
+            color={'#673400ff'}
             colorChart={'#d8a674'}
             colorLabel={'#f2f2f2'}
+            borderColor={'#683C0Dff'}
           />
         )}
         <View
@@ -137,7 +151,7 @@ const HomeParque = ({ navigation }) => {
         >
           <Text
             style={{
-              color: isDarkMode ? PRIMARY_TEXT_DARK : PRIMARY_TEXT_LIGHT,
+              color: isDarkMode ? PRIMARY_TEXT_DARK : '#673400ff',
               fontSize: 20,
               fontWeight: 'bold',
             }}
@@ -229,10 +243,11 @@ const HomeParque = ({ navigation }) => {
                 <EchartVisitantesParque
                   isDarkMode={isDarkMode}
                   data={queryVisitantes.data}
-                  color={'#956C57'}
+                  color={'#673400ff'}
                   colorChart={'#F5C4AC'}
                   colorLabel={PRIMARY_COLOR}
                   gestion={gestion}
+                  borderColor={'#683C0Dff'}
                 />
               </>
             )}
@@ -249,7 +264,7 @@ const HomeParque = ({ navigation }) => {
               <EchartPieEdades
                 isDarkMode={isDarkMode}
                 data={queryVisitantesTipo.data}
-                color={'#6a503f'}
+                color={'#673400ff'}
                 colorChart={'#d8a674'}
                 colorLabel={PRIMARY_COLOR}
                 gestion={gestion}
