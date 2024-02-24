@@ -158,7 +158,7 @@ const authSlice = createSlice({
     },
 
     checkModeDark(state) {
-      AsyncStorage.getItemr('isDarkMode')
+      AsyncStorage.getItem('isDarkMode')
         .then((value) => {
           console.log('value', value)
           if (value == 'true') {

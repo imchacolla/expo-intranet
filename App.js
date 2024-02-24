@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { setUser, setOneSignalId } from './src/store/auth'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { usePushNotification } from './usePushNotification'
 
 //socket
 import { SocketContext, socket } from './src/contexts/SocketContext'
@@ -62,14 +63,13 @@ import {
 } from './src/utils/constants'
 import DrawerMenu from './src/navigation/DrawerMenu'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { usePushNotification } from './usePushNotification'
 
 const StackList = createStackNavigator()
 const Drawer = createDrawerNavigator()
 const Tab = createBottomTabNavigator()
 
 const App = () => {
-  //const { expoPushToken } = usePushNotification()
+  const { expoPushToken } = usePushNotification()
   //console.log('expoPushToken', expoPushToken)
   const RootNavigation = () => {
     const dispatch = useDispatch()

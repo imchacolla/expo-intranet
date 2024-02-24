@@ -1,0 +1,31 @@
+{
+  "cli": {
+    "version": ">= 5.9.3"
+  },
+  "build": {
+    "development": {
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug",
+        "simulator":true
+      }
+    },
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {
+      "ios" : {
+        "appleId" : "developersmiteleferico@gmail.com",
+        "ascAppId": "6476252050",
+        "appleTeamId" : "NWUN24W2AU"
+    
+      }
+    }
+  }
+}

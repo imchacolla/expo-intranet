@@ -9,7 +9,7 @@ export const usePushNotification = () => {
     handleNotification: async () => ({
       shouldShowAlert: true,
       shouldPlaySound: true,
-      shouldSetBadge: true,
+      shouldSetBadge: false,
     }),
   })
 
@@ -33,9 +33,11 @@ export const usePushNotification = () => {
         alert('failed to het push token for push notification')
         return
       }
+      console.log('project id', Constants.expoConfig?.extra?.eas.projectId)
       token = await Notifications.getExpoPushTokenAsync({
         projectId: Constants.expoConfig?.extra?.eas.projectId,
       })
+      //console.log('token', token)
     } else {
       alert('Must use physical device for push notification')
     }
@@ -45,10 +47,10 @@ export const usePushNotification = () => {
         name: 'default',
         importance: Notifications.AndroidImportance.MAX,
         vibrationPattern: [0, 250, 250, 250],
-        lightColor: '#FF231F7C',
+        lightColor: '#392ED47C',
       })
-      return token
     }
+    return token
   }
   useEffect(() => {
     registerForPushNotificationAsync().then((token) => {

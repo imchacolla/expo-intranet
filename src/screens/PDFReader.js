@@ -12,7 +12,7 @@ import {
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import Pdf from 'react-native-pdf'
+//import Pdf from 'react-native-pdf'
 import {
   BACKGROUND_PRIMARY_DARK,
   BACKGROUND_DARK,
@@ -137,7 +137,7 @@ const PDFScreen = ({ route, navigation }) => {
           </View>
         )}
         <View style={{ flex: 1 }}>
-          <Pdf
+          {/* <Pdf
             trustAllCerts={false}
             source={source}
             onLoadComplete={(numberOfPages, filePath) => {
@@ -193,7 +193,7 @@ const PDFScreen = ({ route, navigation }) => {
                   : BACKGROUND_LIGHT,
               },
             ]}
-          />
+          /> */}
         </View>
       </View>
     </SafeAreaView>
